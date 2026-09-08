@@ -1,0 +1,17 @@
+export 'achievement/achievement_repository.dart';
+export 'auth/auth_repository.dart';
+export 'blog/blog_repository.dart';
+export 'comments/comment_repository.dart';
+export 'documents/document_repository.dart';
+export 'entries/entries_repository.dart';
+export 'external/external_repository.dart';
+export 'goal/goal_repository.dart';
+export 'localization/localization_repository.dart';
+export 'metrics/metrics_repository.dart';
+export 'participant/participant_repository.dart';
+export 'prizes/prize_repository.dart';
+export 'ranking/ranking_repository.dart';
+export 'redeemed_prizes/redeemed_prize_repository.dart';
+export 'referrals/referral_repository.dart';
+export 'upload_photo/upload_photo_repository.dart';
+export 'votes/votes_repository.dart';
