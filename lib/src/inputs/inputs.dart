@@ -1,0 +1,11 @@
+export 'confirm_password_input.dart';
+export 'country_code_input.dart';
+export 'email_input.dart';
+export 'id_user_input.dart';
+export 'number_document_input.dart';
+export 'otp_code_input.dart';
+export 'password_input.dart';
+export 'phone_number_input.dart';
+export 'terms_and_conditions_input.dart';
+export 'text_input.dart';
+export 'username_input.dart';

@@ -14,6 +14,10 @@ cambia por cliente es la `campaign` y el `apiKey`.
   concretas: modelos JSON, mappers, datasource (Dio) y repository. Se
   importa aparte (normalmente con alias `as data`) porque sus modelos
   comparten nombre con las entidades de dominio (ej. `Participant`).
+- `package:superlikers_core/inputs.dart` — inputs de Formz reutilizables
+  entre apps (email, password, teléfono, OTP, etc.). Se exporta aparte
+  para que quien solo necesite la capa de datos no cargue con la
+  dependencia de `formz`.
 
 ## Uso
 
@@ -100,6 +104,38 @@ onSessionExpired = () {
 Todos siguen el mismo patrón: entidad de dominio -> datasource/repository
 abstractos -> modelo JSON -> mapper -> datasource/repository impl.
 
+## Inputs (Formz)
+
+`package:superlikers_core/inputs.dart` trae los validadores de formulario
+que se repetían copy-pasteados entre apps: `Email`, `Password`,
+`ConfirmPassword`, `RequiredText`, `OtpCode`, `TermsAndConditions`,
+`CountryCode`, `PhoneNumber`, `Username`, `NumberDocument`, `IdUser`.
+
+Cada uno expone sus reglas como parámetros opcionales del constructor
+(largo mínimo/máximo, requisitos de password, patrón de regex, lista de
+códigos de país, etc.) en vez de tenerlas fijas — la idea es que una app
+pueda ajustar las reglas sin tener que esperar una nueva versión de la
+librería:
+
+```dart
+import 'package:superlikers_core/inputs.dart';
+
+// Reglas por defecto (min. 5 caracteres, 1 mayúscula, 1 carácter especial):
+final password = Password.dirty(value);
+
+// Una app que exige también número y mínimo 8 caracteres:
+final strictPassword = Password.dirty(
+  value,
+  minLength: 8,
+  requireNumber: true,
+);
+
+final otp = OtpCode.dirty(value, length: 4); // OTP de 4 dígitos en vez de 6
+```
+
+No incluye validadores específicos de una sola app (ej. usuario de POS de
+corresponsalías) — esos se quedan en la app que los usa.
+
 **Qué se dejó fuera a propósito** (no tienen datasource/repository en
 heroesoxxo, es decir no son servicios de API sino entidades derivadas o
 de UI/local, o son específicos de una sola app):
@@ -140,9 +176,15 @@ consolidar la librería porque ahora la comparten varios clientes.
 
 ## Consumir el paquete desde una app
 
-Mientras el paquete no viva en un servidor pub privado, cada app lo
-referencia como dependencia de path (útil mientras se itera en paralelo)
-o de git:
+Publicado en [pub.dev](https://pub.dev/packages/superlikers_core):
+
+```yaml
+dependencies:
+  superlikers_core: ^0.1.0
+```
+
+Para iterar en paralelo sin esperar un publish, también sirve como
+dependencia de path o git:
 
 ```yaml
 dependencies:
@@ -150,6 +192,6 @@ dependencies:
     path: ../superlikers-library-flutter
     # o, apuntando a un repo git:
     # git:
-    #   url: https://github.com/<org>/superlikers-library-flutter.git
+    #   url: https://github.com/Wpcarmona/flutter-library-superlikers.git
     #   ref: main
 ```
