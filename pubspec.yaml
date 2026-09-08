@@ -1,8 +1,8 @@
 name: superlikers_core
 description: "Servicios, entidades, repositorios y datasources compartidos entre las apps Flutter de Superlikers (mismo backend/ambientes, distinta campaign/apiKey por cliente)."
 version: 0.0.1
-homepage:
-publish_to: "none"
+homepage: https://github.com/Wpcarmona/flutter-library-superlikers
+repository: https://github.com/Wpcarmona/flutter-library-superlikers
 
 environment:
   sdk: ^3.13.1
