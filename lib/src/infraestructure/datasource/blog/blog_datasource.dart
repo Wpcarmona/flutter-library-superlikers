@@ -62,7 +62,7 @@ class BlogDatasourceImpl extends BlogDatasource {
             'blog_post[format]': format,
             'blog_post[category]': category,
             if (tags != null && tags.isNotEmpty) 'blog_post[tags]': tags,
-            if (pushRedirectUrl != null) 'blog_post[push_redirect_url]': pushRedirectUrl,
+            'blog_post[push_redirect_url]': ?pushRedirectUrl,
             'blog_post[attached_file]': await MultipartFile.fromFile(
               attachedFile.path,
               filename: attachedFile.path.split('/').last,
@@ -78,7 +78,7 @@ class BlogDatasourceImpl extends BlogDatasource {
               'format': format,
               'category': category,
               if (tags != null && tags.isNotEmpty) 'tags': tags,
-              if (pushRedirectUrl != null) 'push_redirect_url': pushRedirectUrl,
+              'push_redirect_url': ?pushRedirectUrl,
             },
           };
 
@@ -133,13 +133,13 @@ class BlogDatasourceImpl extends BlogDatasource {
       data: {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
-        if (distinctId != null) 'distinct_id': distinctId,
-        if (moderation != null) 'moderation': moderation,
-        if (tags != null) 'tags': tags,
-        if (category != null) 'category': category,
-        if (q != null) 'q': q,
-        if (page != null) 'page': page,
-        if (limit != null) 'limit': limit,
+        'distinct_id': ?distinctId,
+        'moderation': ?moderation,
+        'tags': ?tags,
+        'category': ?category,
+        'q': ?q,
+        'page': ?page,
+        'limit': ?limit,
       }
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
@@ -167,8 +167,8 @@ class BlogDatasourceImpl extends BlogDatasource {
           'body': body,
           'format': format,
           'category': category,
-          if (tags != null) 'tags': tags,
-          if (attachedFile != null) 'attached_file': attachedFile,
+          'tags': ?tags,
+          'attached_file': ?attachedFile,
         }
       }
     );

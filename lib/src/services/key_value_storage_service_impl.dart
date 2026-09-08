@@ -8,14 +8,15 @@ import 'storage_keys.dart';
 /// (`flutter_secure_storage`); el resto va en `shared_preferences`.
 ///
 /// Opciones explícitas de `flutter_secure_storage` para el cifrado en
-/// reposo: en Android fuerza `EncryptedSharedPreferences` (respaldado por
-/// el Android Keystore); en iOS usa `first_unlock` — el valor solo es
-/// accesible después del primer desbloqueo tras un reinicio, y no se
-/// incluye en backups de iCloud/iTunes.
+/// reposo: en Android usa el cifrado respaldado por el Android Keystore
+/// (por defecto desde que `EncryptedSharedPreferences` quedó deprecado);
+/// en iOS usa `first_unlock` — el valor solo es accesible después del
+/// primer desbloqueo tras un reinicio, y no se incluye en backups de
+/// iCloud/iTunes.
 class KeyValueStorageServiceImpl extends KeyValueStorageService {
   static const _secureKeys = {StorageKeys.token, StorageKeys.uid};
   static const _secureStorage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 

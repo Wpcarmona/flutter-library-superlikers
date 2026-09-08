@@ -9,7 +9,7 @@ class OtpCode extends FormzInput<String, OtpCodeError> {
 
   const OtpCode.pure({this.length = 6}) : super.pure('');
 
-  const OtpCode.dirty(String value, {this.length = 6}) : super.dirty(value);
+  const OtpCode.dirty(super.value, {this.length = 6}) : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

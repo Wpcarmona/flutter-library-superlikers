@@ -6,7 +6,6 @@ import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
 import '../../mappers/goal/goals.dart';
-import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
 class GoalDatasourceImpl extends GoalDatasource {
@@ -55,11 +54,11 @@ class GoalDatasourceImpl extends GoalDatasource {
         'campaign': Environment.campaign,
         'enabled': enabled,
         'tags': tags,
-        if (page != null) 'page': page,
-        if (limit != null) 'limit': limit,
-        if (sponsorId != null) 'sponsor_id': sponsorId,
-        if (trending != null) 'trending': trending,
-        if (q != null) 'q': q,
+        'page': ?page,
+        'limit': ?limit,
+        'sponsor_id': ?sponsorId,
+        'trending': ?trending,
+        'q': ?q,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
@@ -101,7 +100,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'campaign': Environment.campaign,
         'goal_id': goalId,
         'distinct_id': distinctId,
-        if (uidType != null) 'uid_type': uidType,
+        'uid_type': ?uidType,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
@@ -121,7 +120,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'campaign': Environment.campaign,
         'goal_id': goalId,
         'distinct_id': distinctId,
-        if (uidType != null) 'uid_type': uidType,
+        'uid_type': ?uidType,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);

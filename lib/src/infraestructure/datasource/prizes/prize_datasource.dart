@@ -60,9 +60,9 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'limit': limit,
         'page': page,
         if (tags != null && tags.isNotEmpty) 'tags[]': tags,
-        if (fitsPoints != null) 'fits_points': fitsPoints,
-        if (redeemable != null) 'redeemable': redeemable,
-        if (distinctId != null) 'distinct_id': distinctId,
+        'fits_points': ?fitsPoints,
+        'redeemable': ?redeemable,
+        'distinct_id': ?distinctId,
       },
       options: Options(
         headers: {'Authorization': 'Bearer ${Environment.apiKey}'},
@@ -85,7 +85,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
         'distinct_id': distinctId,
-        if (formData != null) 'form_data': formData,
+        'form_data': ?formData,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);

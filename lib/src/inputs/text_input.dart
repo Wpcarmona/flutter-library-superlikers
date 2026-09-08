@@ -9,8 +9,8 @@ class RequiredText extends FormzInput<String, RequiredTextError> {
 
   const RequiredText.pure({this.minLength = 1, this.maxLength}) : super.pure('');
 
-  const RequiredText.dirty(String value, {this.minLength = 1, this.maxLength})
-      : super.dirty(value);
+  const RequiredText.dirty(super.value, {this.minLength = 1, this.maxLength})
+      : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

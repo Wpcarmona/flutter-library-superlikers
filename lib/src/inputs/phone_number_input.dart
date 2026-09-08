@@ -8,8 +8,8 @@ class PhoneNumber extends FormzInput<String, PhoneNumberError> {
 
   const PhoneNumber.pure({this.minLength = 6, this.maxLength}) : super.pure('');
 
-  const PhoneNumber.dirty(String value, {this.minLength = 6, this.maxLength})
-      : super.dirty(value);
+  const PhoneNumber.dirty(super.value, {this.minLength = 6, this.maxLength})
+      : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

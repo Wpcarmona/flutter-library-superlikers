@@ -24,7 +24,7 @@ class Password extends FormzInput<String, PasswordError> {
   static final RegExp _number = RegExp(r'[0-9]');
   static final RegExp _specialChar = RegExp(r'[\W_]');
 
-  Password.pure({
+  const Password.pure({
     this.minLength = 5,
     this.requireUppercase = true,
     this.requireLowercase = false,
@@ -32,14 +32,14 @@ class Password extends FormzInput<String, PasswordError> {
     this.requireSpecialChar = true,
   }) : super.pure('');
 
-  Password.dirty(
-    String value, {
+  const Password.dirty(
+    super.value, {
     this.minLength = 5,
     this.requireUppercase = true,
     this.requireLowercase = false,
     this.requireNumber = false,
     this.requireSpecialChar = true,
-  }) : super.dirty(value);
+  }) : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

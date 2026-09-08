@@ -26,9 +26,9 @@ class MetricsDatasourceImpl extends MetricsDatasource {
       data: {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
-        if (limit != null) 'limit': limit,
-        if (page != null) 'page': page,
-        if (q != null) 'q': q,
+        'limit': ?limit,
+        'page': ?page,
+        'q': ?q,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
@@ -48,7 +48,7 @@ class MetricsDatasourceImpl extends MetricsDatasource {
       'distinct_id': distinctId,
       'slug': slug,
       'timeframe': timeFrame,
-      if (uidType != null) 'uid_type': uidType,
+      'uid_type': ?uidType,
     });
     final Map<String, dynamic> responseData = jsonDecode(response.data);
     return _jsonToCalculateMetrics(responseData);

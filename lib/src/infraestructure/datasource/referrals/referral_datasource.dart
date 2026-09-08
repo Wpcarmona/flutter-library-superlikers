@@ -25,7 +25,7 @@ class ReferralDatasourceImpl extends ReferralDatasource {
       data: {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
-        if (code != null) 'code': code,
+        'code': ?code,
       },
     );
     final responseData = _parseResponse(response.data);
@@ -44,8 +44,8 @@ class ReferralDatasourceImpl extends ReferralDatasource {
       data: {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
-        if (page != null) 'page': page,
-        if (limit != null) 'limit': limit,
+        'page': ?page,
+        'limit': ?limit,
       },
     );
     final responseData = _parseResponse(response.data);

@@ -26,7 +26,7 @@ class UploadPhotoDatasourceImpl extends UploadPhotoDatasource {
     final response = await dio.post(
       '/photos',
       data: FormData.fromMap({
-        if (imageName != null) 'image_name': imageName,
+        'image_name': ?imageName,
         'campaign': Environment.campaign,
         'api_key': Environment.apiKey,
         'distinct_id': distinctId,

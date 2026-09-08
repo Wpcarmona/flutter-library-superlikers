@@ -11,9 +11,9 @@ class Email extends FormzInput<String, EmailError> {
       : pattern = pattern ?? defaultPattern,
         super.pure('');
 
-  Email.dirty(String value, {RegExp? pattern})
+  Email.dirty(super.value, {RegExp? pattern})
       : pattern = pattern ?? defaultPattern,
-        super.dirty(value);
+        super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

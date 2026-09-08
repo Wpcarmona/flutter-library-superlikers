@@ -40,7 +40,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'campaign': Environment.campaign,
         'event': event,
         'distinct_id': distinctId,
-        if (category != null) 'category': category,
+        'category': ?category,
         'properties': properties,
       },
     );
@@ -126,8 +126,8 @@ class ExternalDatasourceImpl extends ExternalDatasource {
       data: {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
-        if (skip != null) 'skip': skip,
-        if (limit != null) 'limit': limit,
+        'skip': ?skip,
+        'limit': ?limit,
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
@@ -150,7 +150,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
         'external_action_id': externalActionId,
-        if (category != null) 'category': category,
+        'category': ?category,
         'external_form': externalForm,
       },
     );

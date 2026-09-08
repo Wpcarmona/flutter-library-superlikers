@@ -50,9 +50,9 @@ class CommentDatasourceImpl extends CommentDatasource {
         'target_id': targetId,
         'comment': {
           'body': body,
-          if (category != null) 'category': category,
+          'category': ?category,
           if (tags != null && tags.isNotEmpty) 'tags': tags,
-          if (pushRedirectUrl != null) 'push_redirect_url': pushRedirectUrl,
+          'push_redirect_url': ?pushRedirectUrl,
         },
       },
     );
@@ -82,9 +82,9 @@ class CommentDatasourceImpl extends CommentDatasource {
         'comment_id': commentId,
         'comment': {
           'body': body,
-          if (category != null) 'category': category,
+          'category': ?category,
           if (tags != null && tags.isNotEmpty) 'tags': tags,
-          if (pushRedirectUrl != null) 'push_redirect_url': pushRedirectUrl,
+          'push_redirect_url': ?pushRedirectUrl,
         },
       },
     );

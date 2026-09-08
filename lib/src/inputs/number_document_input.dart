@@ -8,8 +8,8 @@ class NumberDocument extends FormzInput<String, NumberDocumentError> {
 
   const NumberDocument.pure({this.minLength = 6, this.maxLength}) : super.pure('');
 
-  const NumberDocument.dirty(String value, {this.minLength = 6, this.maxLength})
-      : super.dirty(value);
+  const NumberDocument.dirty(super.value, {this.minLength = 6, this.maxLength})
+      : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

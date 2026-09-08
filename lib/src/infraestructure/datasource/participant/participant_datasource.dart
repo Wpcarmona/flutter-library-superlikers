@@ -99,11 +99,11 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'campaign': Environment.campaign,
         'distinct_id': distinctId,
         'properties': {
-          if (name != null) 'name': name,
-          if (phone != null) 'phone': phone,
-          if (cargo != null) 'cargo': cargo,
-          if (fcmToken != null) 'fcm': fcmToken,
-          if (autorizationNumber != null) 'autorizacion_celular': autorizationNumber,
+          'name': ?name,
+          'phone': ?phone,
+          'cargo': ?cargo,
+          'fcm': ?fcmToken,
+          'autorizacion_celular': ?autorizationNumber,
         },
       },
     );

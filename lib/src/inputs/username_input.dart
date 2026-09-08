@@ -8,8 +8,8 @@ class Username extends FormzInput<String, UsernameError> {
 
   const Username.pure({this.minLength = 6, this.maxLength}) : super.pure('');
 
-  const Username.dirty(String value, {this.minLength = 6, this.maxLength})
-      : super.dirty(value);
+  const Username.dirty(super.value, {this.minLength = 6, this.maxLength})
+      : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

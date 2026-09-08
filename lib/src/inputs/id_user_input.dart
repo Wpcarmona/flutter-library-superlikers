@@ -11,7 +11,7 @@ class IdUser extends FormzInput<String, IdUserError> {
 
   const IdUser.pure({this.maxLength = 7}) : super.pure('');
 
-  const IdUser.dirty(String value, {this.maxLength = 7}) : super.dirty(value);
+  const IdUser.dirty(super.value, {this.maxLength = 7}) : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

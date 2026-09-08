@@ -23,7 +23,7 @@ class DocumentDatasourceImpl extends DocumentDatasource {
       '/microsite/documents',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
       data: FormData.fromMap({
-        if (documentName != null) 'document_name': documentName,
+        'document_name': ?documentName,
         'campaign': Environment.campaign,
         'api_key': Environment.apiKey,
         'distinct_id': distinctId,

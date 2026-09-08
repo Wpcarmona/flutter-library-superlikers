@@ -34,10 +34,10 @@ class CountryCode extends FormzInput<String, CountryCodeError> {
 
   final List<String> validCodes;
 
-  CountryCode.pure({this.validCodes = defaultValidCodes}) : super.pure('');
+  const CountryCode.pure({this.validCodes = defaultValidCodes}) : super.pure('');
 
-  CountryCode.dirty(String value, {this.validCodes = defaultValidCodes})
-      : super.dirty(value);
+  const CountryCode.dirty(super.value, {this.validCodes = defaultValidCodes})
+      : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;
