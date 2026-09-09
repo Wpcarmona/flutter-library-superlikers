@@ -1,3 +1,11 @@
+## 0.1.1
+
+* Fix `createPinnedDio`/`applyCertificatePinning`: also trust ISRG Root X1 (Let's Encrypt),
+  in addition to Amazon Root CA 1. The dev/labs host (`api.superlikerslabs.com`) serves a
+  Let's Encrypt certificate, different from prod's (`*.superlikers.com`, Amazon-issued) —
+  every network call against dev was failing the TLS handshake before this fix. Verified
+  against both real hosts.
+
 ## 0.1.0
 
 * Add `package:superlikers_core/inputs.dart`: configurable Formz inputs shared across
