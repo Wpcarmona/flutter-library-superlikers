@@ -1,3 +1,19 @@
+## 0.2.0
+
+* **Breaking**: `ParticipantPublicInfo` (returned by `getParticipantPublicInfo`, the
+  `/microsite/participants/info` endpoint) no longer hardcodes campaign-specific fields
+  (`name`, `lastName`, `cellphoneNumber`, `idEmployed`, `region`, `tienda`, `plaza`,
+  `nombreTienda`, `terms`, `rol`, `cargo`, `nivel`, `fcmToken`, `autorizationNumber`,
+  `isPublisher`). Real payloads from different campaigns showed this endpoint's schema varies
+  as much as `login`/`register`'s — some campaigns don't send `nombres`/`apellidos`/
+  `id_empleado` at all (using `nombre_completo`/`numero_de_documento` instead, or `name` with
+  a completely different extra-fields set), which crashed parsing (`null` into a non-nullable
+  `String`). Only fields confirmed stable across every observed campaign stay typed (`uid`,
+  `uidType`, `email`, `points`, `totalPoints`, `coins`, `totalCoins`, `state`, `badEmail`,
+  `emailVerified`, `cellphoneVerified`, `unconfirmedEmail`, `unconfirmedCellphone`, `avatar`,
+  `lastActivityAt`, `tags`); everything else now lands in a new `properties: Map<String,
+  dynamic>` bag, same pattern already used by `Participant`.
+
 ## 0.1.1
 
 * Fix `createPinnedDio`/`applyCertificatePinning`: also trust ISRG Root X1 (Let's Encrypt),
