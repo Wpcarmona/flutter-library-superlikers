@@ -14,6 +14,12 @@
   `lastActivityAt`, `tags`); everything else now lands in a new `properties: Map<String,
   dynamic>` bag, same pattern already used by `Participant`.
 
+* `FieldEntityField`/`FieldEntityModel` (external form field definitions, returned by
+  `/external_forms/actions/fields_info`) gain a `properties` bag too. `format`/`choices` stay
+  typed since they're common and useful, but a `field_type` not seen yet could bring its own
+  extra metadata key beyond those two — it now lands in `properties` instead of being silently
+  dropped. Non-breaking (purely additive).
+
 ## 0.1.1
 
 * Fix `createPinnedDio`/`applyCertificatePinning`: also trust ISRG Root X1 (Let's Encrypt),

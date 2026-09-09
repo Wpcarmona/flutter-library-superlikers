@@ -54,6 +54,22 @@ class DynamicFieldsData {
       };
 }
 
+/// Metadata extra por `field_type` que ya se modela con tipo propio;
+/// cualquier otra clave que traiga un campo cae en [FieldEntityModel.properties].
+const _knownFieldKeys = {
+  'field_type',
+  'type_value',
+  'name',
+  'label',
+  'help_text',
+  'placeholder',
+  'default_value',
+  'required_field',
+  'unique_field',
+  'format',
+  'choices',
+};
+
 class FieldEntityModel {
   final String fieldType;
   final String typeValue;
@@ -66,6 +82,7 @@ class FieldEntityModel {
   final bool uniqueField;
   final String? format;
   final List<ChoiceEntity>? choices;
+  final Map<String, dynamic> properties;
 
   FieldEntityModel({
     required this.fieldType,
@@ -79,22 +96,25 @@ class FieldEntityModel {
     required this.uniqueField,
     this.format,
     this.choices,
+    this.properties = const {},
   });
 
   factory FieldEntityModel.fromJson(Map<String, dynamic> json) => FieldEntityModel(
-        fieldType: json["field_type"],
-        typeValue: json["type_value"],
-        name: json["name"],
-        label: json["label"],
+        fieldType: json["field_type"] ?? '',
+        typeValue: json["type_value"] ?? '',
+        name: json["name"] ?? '',
+        label: json["label"] ?? '',
         helpText: json["help_text"],
         placeholder: json["placeholder"],
         defaultValue: json["default_value"],
-        requiredField: json["required_field"],
-        uniqueField: json["unique_field"],
+        requiredField: json["required_field"] ?? false,
+        uniqueField: json["unique_field"] ?? false,
         format: json["format"],
         choices: json["choices"] != null
             ? List<ChoiceEntity>.from(json["choices"].map((x) => ChoiceEntity.fromJson(x)))
             : null,
+        properties: Map<String, dynamic>.from(json)
+          ..removeWhere((key, _) => _knownFieldKeys.contains(key)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -109,6 +129,7 @@ class FieldEntityModel {
         "unique_field": uniqueField,
         "format": format,
         "choices": choices?.map((x) => x.toJson()).toList(),
+        ...properties,
       };
 }
 

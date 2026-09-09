@@ -30,6 +30,7 @@ class ExternalMapper {
                 choices: f.choices
                     ?.map((c) => domain.ChoiceField(label: c.label, value: c.value))
                     .toList(),
+                properties: f.properties,
               ),
             )
             .toList(),
