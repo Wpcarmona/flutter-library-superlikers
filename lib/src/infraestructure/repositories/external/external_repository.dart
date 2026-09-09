@@ -34,6 +34,24 @@ class ExternalRepositoryImpl extends ExternalRepository {
   }
 
   @override
+  Future<ExternalFormField> getExternalFormFieldByCategory({
+    required String token,
+    required String category,
+  }) async {
+    final list = await getExternalFormListByCategory(
+      token: token,
+      category: category,
+      limit: '1',
+    );
+    if (list.isEmpty) {
+      throw Exception(
+        'No existe ninguna external action para la categoría "$category" en esta campaign.',
+      );
+    }
+    return getExternalFormField(token: token, externalActionId: list.first.id);
+  }
+
+  @override
   Future<List<ExternalFormList>> getExternalFormListByCategory({
     required String token,
     required String category,

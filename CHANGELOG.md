@@ -20,6 +20,12 @@
   extra metadata key beyond those two — it now lands in `properties` instead of being silently
   dropped. Non-breaking (purely additive).
 
+* Add `ExternalRepository.getExternalFormFieldByCategory({token, category})`: a convenience
+  that composes `getExternalFormListByCategory` (to resolve `category` -> `external_action_id`)
+  + `getExternalFormField` into one call, for callers who only need the first external action
+  matching a category. Throws if none exist for that category. The two original methods are
+  unchanged and still independently callable. Non-breaking (purely additive).
+
 ## 0.1.1
 
 * Fix `createPinnedDio`/`applyCertificatePinning`: also trust ISRG Root X1 (Let's Encrypt),
