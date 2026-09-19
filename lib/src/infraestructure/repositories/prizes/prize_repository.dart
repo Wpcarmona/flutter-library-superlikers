@@ -53,4 +53,22 @@ class PrizeRepositoryImpl extends PrizeRepository {
       category: category,
     );
   }
+
+  @override
+  Future<CouponRedeemResult> redeemCoupon({
+    required String couponId,
+    required String distinctId,
+  }) {
+    return datasource.redeemCoupon(
+      couponId: couponId,
+      distinctId: distinctId,
+    );
+  }
+
+  @override
+  Future<CouponInfo> getCouponInfo({
+    required String code,
+  }) {
+    return datasource.getCouponInfo(code: code);
+  }
 }

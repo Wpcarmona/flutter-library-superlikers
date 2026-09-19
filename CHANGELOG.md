@@ -1,3 +1,16 @@
+## 0.3.0
+
+* Add coupon services to `PrizeRepository`/`PrizesDatasource`:
+  * `redeemCoupon({couponId, distinctId})` — `POST /coupons/{id}/create`, generates a coupon
+    redemption and returns `CouponRedeemResult` (the redeemed `coupon` as a `Reward`, the
+    `redemption` details, and the redemption `message`). The redemption code to hand off is
+    `CouponRedeemResult.code`.
+  * `getCouponInfo({code})` — `GET /coupons/info?campaign=...&code=...` (with
+    `Authorization: Bearer <apiKey>`), returns `CouponInfo` with the current state of a
+    previously redeemed coupon.
+  * New entities `CouponRedeemResult`, `CouponRedemption`, `CouponInfo`. Non-breaking (purely
+    additive).
+
 ## 0.2.0
 
 * **Breaking**: `ParticipantPublicInfo` (returned by `getParticipantPublicInfo`, the

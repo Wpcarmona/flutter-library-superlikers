@@ -50,4 +50,42 @@ class PrizesMapper {
       ),
     );
   }
+
+  static domain.CouponRedeemResult couponRedeemToEntity(infra.CouponRedeemResponse response) {
+    return domain.CouponRedeemResult(
+      ok: response.ok,
+      coupon: rewardToEntity(response.object.coupon),
+      redemption: domain.CouponRedemption(
+        id: response.object.redemption.id,
+        redeemId: response.object.redemption.redeemId,
+        prizeName: response.object.redemption.prizeName,
+        imageUrl: response.object.redemption.imageUrl,
+        createdAt: response.object.redemption.createdAt,
+        updatedAt: response.object.redemption.updatedAt,
+        points: response.object.redemption.points,
+        pointType: response.object.redemption.pointType?.toString(),
+        state: response.object.redemption.state,
+        isRedemptionCoupon: response.object.redemption.isRedemptionCoupon,
+        prizeDescription: response.object.redemption.prizeDescription,
+        code: response.object.redemption.code,
+      ),
+      message: response.object.message,
+    );
+  }
+
+  static domain.CouponInfo couponInfoToEntity(infra.CouponInfoResponse response) {
+    return domain.CouponInfo(
+      ok: response.ok,
+      name: response.name,
+      state: response.state,
+      id: response.id,
+      prizePoints: response.prizePoints,
+      prizePointType: response.prizePointType?.toString(),
+      prizeName: response.prizeName,
+      prizeDescription: response.prizeDescription,
+      prizeImageUrl: response.prizeImageUrl,
+      prizeTags: response.prizeTags,
+      expiresAt: response.expiresAt,
+    );
+  }
 }

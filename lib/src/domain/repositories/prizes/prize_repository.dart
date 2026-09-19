@@ -22,4 +22,16 @@ abstract class PrizeRepository {
     Map<String, dynamic>? formData,
     String? category,
   });
+
+  /// Genera (redime) un cupón para el premio [couponId], devolviendo el
+  /// código de canje en [CouponRedeemResult.code].
+  Future<CouponRedeemResult> redeemCoupon({
+    required String couponId,
+    required String distinctId,
+  });
+
+  /// Consulta el estado de un cupón ya redimido a partir de su [code].
+  Future<CouponInfo> getCouponInfo({
+    required String code,
+  });
 }

@@ -6,7 +6,7 @@ import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
 import '../../mappers/mapper.dart';
-import '../../models/models.dart' hide Reward;
+import '../../models/models.dart' hide Reward, CouponRedemption;
 
 class PrizeDatasourceImpl extends PrizesDatasource {
   final dio = createPinnedDio(baseUrl: Environment.baseUrl);
@@ -24,6 +24,16 @@ class PrizeDatasourceImpl extends PrizesDatasource {
   RewardRedeem _jsonToRewardRedeem(Map<String, dynamic> json) {
     final rewardRedeemResponse = RewardRedeemResponse.fromJson(json);
     return PrizesMapper.rewardRedeemToEntity(rewardRedeemResponse);
+  }
+
+  CouponRedeemResult _jsonToCouponRedeem(Map<String, dynamic> json) {
+    final couponRedeemResponse = CouponRedeemResponse.fromJson(json);
+    return PrizesMapper.couponRedeemToEntity(couponRedeemResponse);
+  }
+
+  CouponInfo _jsonToCouponInfo(Map<String, dynamic> json) {
+    final couponInfoResponse = CouponInfoResponse.fromJson(json);
+    return PrizesMapper.couponInfoToEntity(couponInfoResponse);
   }
 
   @override
@@ -90,5 +100,40 @@ class PrizeDatasourceImpl extends PrizesDatasource {
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
     return _jsonToRewardRedeem(responseData);
+  }
+
+  @override
+  Future<CouponRedeemResult> redeemCoupon({
+    required String couponId,
+    required String distinctId,
+  }) async {
+    final response = await dio.post(
+      '/coupons/$couponId/create',
+      data: {
+        'api_key': Environment.apiKey,
+        'campaign': Environment.campaign,
+        'distinct_id': distinctId,
+      },
+    );
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToCouponRedeem(responseData);
+  }
+
+  @override
+  Future<CouponInfo> getCouponInfo({
+    required String code,
+  }) async {
+    final response = await dio.get(
+      '/coupons/info',
+      queryParameters: {
+        'campaign': Environment.campaign,
+        'code': code,
+      },
+      options: Options(
+        headers: {'Authorization': 'Bearer ${Environment.apiKey}'},
+      ),
+    );
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToCouponInfo(responseData);
   }
 }
