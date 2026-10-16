@@ -20,20 +20,37 @@ class UploadPhotoDatasourceImpl extends UploadPhotoDatasource {
   @override
   Future<UploadPhoto> uploadPhoto({
     required String distinctId,
-    required File photo,
+    File? photo,
+    String? imageUrl,
     String? imageName,
+    String? title,
+    String? category,
   }) async {
+    if (photo == null && (imageUrl == null || imageUrl.isEmpty)) {
+      throw ArgumentError('uploadPhoto requiere `photo` o `imageUrl`.');
+    }
+    if (photo != null && !UploadPhoto.isAllowed(photo.path)) {
+      throw ArgumentError.value(
+        photo.path,
+        'photo',
+        'Formato no permitido. Usa: ${UploadPhoto.allowedExtensions.join(', ')}',
+      );
+    }
     final response = await dio.post(
       '/photos',
       data: FormData.fromMap({
-        'image_name': ?imageName,
         'campaign': Environment.campaign,
         'api_key': Environment.apiKey,
         'distinct_id': distinctId,
-        'upload_photo': await MultipartFile.fromFile(
-          photo.path,
-          filename: photo.path.split('/').last,
-        ),
+        if (photo == null) 'image_url': imageUrl,
+        'image_name': ?imageName,
+        'title': ?title,
+        'category': ?category,
+        if (photo != null)
+          'upload_photo': await MultipartFile.fromFile(
+            photo.path,
+            filename: photo.path.split('/').last,
+          ),
       }),
     );
     final raw = response.data;

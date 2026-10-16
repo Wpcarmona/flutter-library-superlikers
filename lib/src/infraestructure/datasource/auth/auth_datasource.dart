@@ -79,13 +79,14 @@ class AuthDatasourceImpl extends AuthDatasource {
   }
 
   @override
-  Future<Register> register({required Map<String, dynamic> properties}) async {
+  Future<Register> register({required Map<String, dynamic> properties, String? referralsCode}) async {
     final response = await dio.post(
       '/microsite/participants',
       data: {
         "api_key": Environment.apiKey,
         "campaign": Environment.campaign,
         "properties": properties,
+        if (referralsCode != null) "participation": {"referrals_code": referralsCode},
       },
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);

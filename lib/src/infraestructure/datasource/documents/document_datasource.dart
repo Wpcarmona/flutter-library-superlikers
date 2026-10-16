@@ -18,7 +18,16 @@ class DocumentDatasourceImpl extends DocumentDatasource {
     required String distinctId,
     required File document,
     String? documentName,
+    String? title,
+    String? category,
   }) async {
+    if (!UploadDocument.isAllowed(document.path)) {
+      throw ArgumentError.value(
+        document.path,
+        'document',
+        'Formato no permitido. Usa: ${UploadDocument.allowedExtensions.join(', ')}',
+      );
+    }
     final response = await dio.post(
       '/microsite/documents',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -27,6 +36,8 @@ class DocumentDatasourceImpl extends DocumentDatasource {
         'campaign': Environment.campaign,
         'api_key': Environment.apiKey,
         'distinct_id': distinctId,
+        'title': ?title,
+        'category': ?category,
         'upload_document': await MultipartFile.fromFile(
           document.path,
           filename: document.path.split('/').last,

@@ -1,3 +1,34 @@
+## 0.4.0
+
+* `UploadPhotoRepository.uploadPhoto` (`POST /photos`) now covers every documented param:
+  * `photo` is now optional; new `imageUrl` (`image_url`) lets you register an image by URL
+    instead of uploading it. One of the two is required (throws `ArgumentError` otherwise).
+  * New optional `title` and `category` for the activity being recorded.
+  * `image_url` and `upload_photo` are mutually exclusive: when both are given, only `photo`
+    is sent (the API gives it priority anyway).
+  * `imageName` is still sent as-is, but per the API docs it only takes effect with `imageUrl`
+    (truncated to 200 chars server-side).
+  * `photo` is validated against the new `UploadPhoto.allowedExtensions` (jpg, jpeg, gif, png,
+    swf, css); other formats throw `ArgumentError` before any request is made. Re-uploading an
+    image the API already has fails server-side with "Sha1 is already taken".
+* `DocumentRepository.uploadDocument` (`POST /microsite/documents`):
+  * New optional `title` and `category` for the activity being recorded.
+  * `document` is validated against the new `UploadDocument.allowedExtensions` (images, video,
+    audio, text documents, spreadsheets, presentations, css — see the constant); other formats
+    throw `ArgumentError` before any request is made.
+* `UploadPhoto.isAllowed(path)` / `UploadDocument.isAllowed(path)` helpers, and the
+  `allowedExtensions` lists to configure file pickers in the apps.
+* Referrals module: you can now set who referred a participant (`referrals_code`):
+  * `AuthRepository.register` gets an optional `referralsCode`, sent as
+    `participation.referrals_code` (as the API docs require for sign-up).
+  * `ParticipantRepository.updateUser` gets an optional `referralsCode`, sent as
+    `properties.referrals_code`, to set it later if it wasn't given at sign-up.
+  * `ReferralRepository.getOrUpdateReferralCode` / `getParticipantReferrals` were already
+    implemented; only their docs were expanded.
+* Callers are unaffected (except that disallowed formats now fail fast); custom
+  `UploadPhotoDatasource`/`UploadPhotoRepository`/`DocumentDatasource`/`DocumentRepository`/
+  `AuthDatasource`/`AuthRepository`/`ParticipantDatasource`/`ParticipantRepository` implementations must update their override signature.
+
 ## 0.3.0
 
 * Add coupon services to `PrizeRepository`/`PrizesDatasource`:

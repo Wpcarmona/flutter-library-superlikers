@@ -90,6 +90,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
     String? cargo,
     String? fcmToken,
     String? autorizationNumber,
+    String? referralsCode,
   }) async {
     final response = await dio.post(
       '/participants/update',
@@ -104,6 +105,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
           'cargo': ?cargo,
           'fcm': ?fcmToken,
           'autorizacion_celular': ?autorizationNumber,
+          'referrals_code': ?referralsCode,
         },
       },
     );

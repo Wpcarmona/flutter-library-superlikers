@@ -17,6 +17,8 @@ abstract class ParticipantRepository {
     required String distinctId,
   });
 
+  /// [referralsCode] asigna el código de referido de quien invitó al
+  /// participante (módulo Referidos), si no se envió al registrarse.
   Future<UpdateUser> updateUser({
     required String token,
     required String distinctId,
@@ -25,6 +27,7 @@ abstract class ParticipantRepository {
     String? cargo,
     String? fcmToken,
     String? autorizationNumber,
+    String? referralsCode,
   });
 
   /// Busca participantes por [tags] (uso típico: admin/coordinador buscando

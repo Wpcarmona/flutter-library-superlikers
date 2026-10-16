@@ -15,12 +15,16 @@ class DocumentRepositoryImpl extends DocumentRepository {
     required String distinctId,
     required File document,
     String? documentName,
+    String? title,
+    String? category,
   }) {
     return datasource.uploadDocument(
       token: token,
       distinctId: distinctId,
       document: document,
       documentName: documentName,
+      title: title,
+      category: category,
     );
   }
 }

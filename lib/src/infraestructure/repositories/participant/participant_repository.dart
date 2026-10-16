@@ -43,6 +43,7 @@ class ParticipantRepositoryImpl extends ParticipantRepository {
     String? cargo,
     String? fcmToken,
     String? autorizationNumber,
+    String? referralsCode,
   }) {
     return datasource.updateUser(
       token: token,
@@ -52,6 +53,7 @@ class ParticipantRepositoryImpl extends ParticipantRepository {
       cargo: cargo,
       fcmToken: fcmToken,
       autorizationNumber: autorizationNumber,
+      referralsCode: referralsCode,
     );
   }
 

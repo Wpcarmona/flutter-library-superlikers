@@ -18,8 +18,8 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Register> register({required Map<String, dynamic> properties}) {
-    return authDatasource.register(properties: properties);
+  Future<Register> register({required Map<String, dynamic> properties, String? referralsCode}) {
+    return authDatasource.register(properties: properties, referralsCode: referralsCode);
   }
 
   @override

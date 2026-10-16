@@ -14,7 +14,12 @@ abstract class AuthRepository {
   /// campaign (varían por cliente: OXXO pide `plaza`/`region`/`tienda`,
   /// otro cliente puede pedir otro set distinto). Se envían tal cual al
   /// backend.
-  Future<Register> register({required Map<String, dynamic> properties});
+  ///
+  /// [referralsCode] es el código de referido de quien invitó al
+  /// participante (módulo Referidos); se envía como
+  /// `participation.referrals_code`. Si no se envía aquí, se puede asignar
+  /// después con `updateUser(referralsCode: ...)`.
+  Future<Register> register({required Map<String, dynamic> properties, String? referralsCode});
 
   Future<ForgotPassword> forgotPassword({required String email});
 

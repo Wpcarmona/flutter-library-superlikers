@@ -12,9 +12,19 @@ class UploadPhotoRepositoryImpl extends UploadPhotoRepository {
   @override
   Future<UploadPhoto> uploadPhoto({
     required String distinctId,
-    required File photo,
+    File? photo,
+    String? imageUrl,
     String? imageName,
+    String? title,
+    String? category,
   }) {
-    return datasource.uploadPhoto(distinctId: distinctId, photo: photo, imageName: imageName);
+    return datasource.uploadPhoto(
+      distinctId: distinctId,
+      photo: photo,
+      imageUrl: imageUrl,
+      imageName: imageName,
+      title: title,
+      category: category,
+    );
   }
 }
