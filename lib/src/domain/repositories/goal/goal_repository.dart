@@ -16,6 +16,7 @@ abstract class GoalRepository {
     required List<String> tags,
     required String distictId,
     int page = 1,
+    bool? includeEnded,
   });
 
   Future<AcceptGoals> acceptGoals({

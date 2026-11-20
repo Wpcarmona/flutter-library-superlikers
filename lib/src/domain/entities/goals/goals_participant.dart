@@ -1,4 +1,9 @@
 class GoalsParticipant {
+  /// JSON original del ítem tal como lo devolvió el backend. Su contenido
+  /// depende de la campaign (campos propios, configuración, metadatos del
+  /// proveedor…), así que se conserva completo para que cada app lea lo suyo.
+  final Map<String, dynamic> raw;
+
   final String id;
   final String userId;
   final String goalId;
@@ -27,6 +32,7 @@ class GoalsParticipant {
   final List<ConditionsGoals> conditions;
 
   GoalsParticipant({
+    this.raw = const {},
     required this.id,
     required this.userId,
     required this.goalId,

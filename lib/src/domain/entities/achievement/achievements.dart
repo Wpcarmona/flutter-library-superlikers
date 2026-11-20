@@ -23,6 +23,11 @@ class DataAchievement {
 }
 
 class Achievements {
+  /// JSON original del ítem tal como lo devolvió el backend. Su contenido
+  /// depende de la campaign (campos propios, configuración, metadatos del
+  /// proveedor…), así que se conserva completo para que cada app lea lo suyo.
+  final Map<String, dynamic> raw;
+
   final String id;
   final String type;
   final String state;
@@ -51,6 +56,7 @@ class Achievements {
   final AchievementGoal goal;
 
   Achievements({
+    this.raw = const {},
     required this.id,
     required this.type,
     required this.state,

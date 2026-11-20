@@ -1,3 +1,4 @@
+import '../utils/json_read.dart';
 import 'dart:convert';
 
 GetBlogsResponse getBlogsResponseFromJson(String str) => GetBlogsResponse.fromJson(json.decode(str));
@@ -14,8 +15,8 @@ class GetBlogsResponse {
     });
 
     factory GetBlogsResponse.fromJson(Map<String, dynamic> json) => GetBlogsResponse(
-        ok: json["ok"],
-        data: GetBlogsData.fromJson(json["data"]),
+        ok: readString(json["ok"]),
+        data: GetBlogsData.fromJson(readMap(json["data"])),
     );
 
     Map<String, dynamic> toJson() => {
@@ -40,11 +41,11 @@ class GetBlogsData {
     });
 
     factory GetBlogsData.fromJson(Map<String, dynamic> json) => GetBlogsData(
-        page: json["page"],
-        pageSize: json["page_size"],
-        totalPages: json["total_pages"],
-        totalData: json["total_data"],
-        blogPosts: List<BlogPost>.from(json["blog_posts"].map((x) => BlogPost.fromJson(x))),
+        page: readInt(json["page"]),
+        pageSize: readInt(json["page_size"]),
+        totalPages: readInt(json["total_pages"]),
+        totalData: readInt(json["total_data"]),
+        blogPosts: [for (final x in (json["blog_posts"] is List ? json["blog_posts"] as List : const [])) if (x is Map) BlogPost.fromJson(Map<String, dynamic>.from(x))],
     );
 
     Map<String, dynamic> toJson() => {
@@ -57,6 +58,8 @@ class GetBlogsData {
 }
 
 class BlogPost {
+  Map<String, dynamic> raw;
+
     String id;
     bool admin;
     bool archived;
@@ -89,6 +92,7 @@ class BlogPost {
     String? videoCoverUrl;
 
     BlogPost({
+    this.raw = const {},
         required this.id,
         required this.admin,
         required this.archived,
@@ -122,32 +126,33 @@ class BlogPost {
     });
 
     factory BlogPost.fromJson(Map<String, dynamic> json) => BlogPost(
-        id: json["_id"],
-        admin: json["admin"],
-        archived: json["archived"],
-        atype: json["atype"],
-        category: json["category"],
-        executeDate: DateTime.parse(json["execute_date"]),
-        extraPoints: json["extra_points"],
-        moderation: json["moderation"],
-        ownerName: json["owner_name"],
-        points: json["points"],
-        state: json["state"],
+        raw: json,
+        id: readString(json["_id"]),
+        admin: readBool(json["admin"]),
+        archived: readBool(json["archived"]),
+        atype: readString(json["atype"]),
+        category: readString(json["category"]),
+        executeDate: readDate(json["execute_date"]),
+        extraPoints: readInt(json["extra_points"]),
+        moderation: readString(json["moderation"]),
+        ownerName: readString(json["owner_name"]),
+        points: readInt(json["points"]),
+        state: readString(json["state"]),
         team: json["team"],
-        participant: GetBlogsParticipant.fromJson(json["participant"]),
-        permalink: json["permalink"],
+        participant: GetBlogsParticipant.fromJson(readMap(json["participant"])),
+        permalink: readString(json["permalink"]),
         shortUrl: json["short_url"],
         facebookTabUrl: json["facebook_tab_url"],
-        votesCount: json["votes_count"],
-        votesAverage: json["votes_average"],
-        votesUp: json["votes_up"],
-        votesDown: json["votes_down"],
-        title: json["title"],
-        body: json["body"],
+        votesCount: readInt(json["votes_count"]),
+        votesAverage: readInt(json["votes_average"]),
+        votesUp: readInt(json["votes_up"]),
+        votesDown: readInt(json["votes_down"]),
+        title: readString(json["title"]),
+        body: readString(json["body"]),
         editableBy: json["editable_by"],
         deleteableBy: json["deleteable_by"],
-        createdAt: json["created_at"],
-        format: json["format"],
+        createdAt: readInt(json["created_at"]),
+        format: readString(json["format"]),
         tags: List<dynamic>.from(json["tags"].map((x) => x)),
         participantsTags: List<dynamic>.from(json["participants_tags"].map((x) => x)),
         coverUrl: json["cover_url"] as String?,
@@ -208,13 +213,13 @@ class GetBlogsParticipant {
     });
 
     factory GetBlogsParticipant.fromJson(Map<String, dynamic> json) => GetBlogsParticipant(
-        id: json["_id"],
-        email: json["email"],
-        name: json["name"],
-        avatar: json["avatar"],
-        uid: json["uid"],
+        id: readString(json["_id"]),
+        email: readString(json["email"]),
+        name: readString(json["name"]),
+        avatar: readString(json["avatar"]),
+        uid: readString(json["uid"]),
         uidType: json["uid_type"],
-        state: json["state"],
+        state: readString(json["state"]),
     );
 
     Map<String, dynamic> toJson() => {

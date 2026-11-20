@@ -21,6 +21,11 @@ class DataEntries {
 }
 
 class ListEntriesResponse {
+  /// JSON original del ítem tal como lo devolvió el backend. Su contenido
+  /// depende de la campaign (campos propios, configuración, metadatos del
+  /// proveedor…), así que se conserva completo para que cada app lea lo suyo.
+  final Map<String, dynamic> raw;
+
   final num activityCount;
   final String category;
   final String createdAt;
@@ -40,6 +45,7 @@ class ListEntriesResponse {
   final EntryRedemption? redemption;
 
   ListEntriesResponse({
+    this.raw = const {},
     required this.activityCount,
     required this.category,
     required this.createdAt,

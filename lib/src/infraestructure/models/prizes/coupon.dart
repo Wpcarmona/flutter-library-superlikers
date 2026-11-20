@@ -1,3 +1,4 @@
+import '../utils/json_read.dart';
 import 'reward.dart' show ObjectReward;
 
 class CouponRedeemResponse {
@@ -11,8 +12,8 @@ class CouponRedeemResponse {
 
   factory CouponRedeemResponse.fromJson(Map<String, dynamic> json) =>
       CouponRedeemResponse(
-        ok: json["ok"] ?? '',
-        object: CouponRedeemObject.fromJson(json["object"]),
+        ok: readString(json["ok"], ''),
+        object: CouponRedeemObject.fromJson(readMap(json["object"])),
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,9 +35,9 @@ class CouponRedeemObject {
 
   factory CouponRedeemObject.fromJson(Map<String, dynamic> json) =>
       CouponRedeemObject(
-        coupon: ObjectReward.fromJson(json["coupon"]),
-        redemption: CouponRedemption.fromJson(json["redemption"]),
-        message: json["message"] ?? '',
+        coupon: ObjectReward.fromJson(readMap(json["coupon"])),
+        redemption: CouponRedemption.fromJson(readMap(json["redemption"])),
+        message: readString(json["message"], ''),
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +48,8 @@ class CouponRedeemObject {
 }
 
 class CouponRedemption {
+  Map<String, dynamic> raw;
+
   String id;
   String redeemId;
   String prizeName;
@@ -61,6 +64,7 @@ class CouponRedemption {
   String code;
 
   CouponRedemption({
+    this.raw = const {},
     required this.id,
     required this.redeemId,
     required this.prizeName,
@@ -77,18 +81,19 @@ class CouponRedemption {
 
   factory CouponRedemption.fromJson(Map<String, dynamic> json) =>
       CouponRedemption(
-        id: json["_id"] ?? '',
-        redeemId: json["redeem_id"] ?? '',
-        prizeName: json["prize_name"] ?? '',
-        imageUrl: json["image_url"] ?? '',
-        createdAt: json["created_at"] ?? 0,
-        updatedAt: json["updated_at"] ?? 0,
-        points: json["points"] ?? 0,
+        raw: json,
+        id: readString(json["_id"], ''),
+        redeemId: readString(json["redeem_id"], ''),
+        prizeName: readString(json["prize_name"], ''),
+        imageUrl: readString(json["image_url"], ''),
+        createdAt: readInt(json["created_at"], 0),
+        updatedAt: readInt(json["updated_at"], 0),
+        points: readInt(json["points"], 0),
         pointType: json["point_type"],
-        state: json["state"] ?? '',
-        isRedemptionCoupon: json["is_redemption_coupon"] ?? false,
-        prizeDescription: json["prize_description"] ?? '',
-        code: json["code"] ?? '',
+        state: readString(json["state"], ''),
+        isRedemptionCoupon: readBool(json["is_redemption_coupon"], false),
+        prizeDescription: readString(json["prize_description"], ''),
+        code: readString(json["code"], ''),
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,16 +141,16 @@ class CouponInfoResponse {
 
   factory CouponInfoResponse.fromJson(Map<String, dynamic> json) =>
       CouponInfoResponse(
-        ok: json["ok"] ?? '',
-        name: json["name"] ?? '',
-        state: json["state"] ?? '',
-        id: json["id"] ?? '',
-        prizePoints: json["prize_points"] ?? 0,
+        ok: readString(json["ok"], ''),
+        name: readString(json["name"], ''),
+        state: readString(json["state"], ''),
+        id: readString(json["id"], ''),
+        prizePoints: readNum(json["prize_points"], 0),
         prizePointType: json["prize_point_type"],
-        prizeName: json["prize_name"] ?? '',
-        prizeDescription: json["prize_description"] ?? '',
-        prizeImageUrl: json["prize_image_url"] ?? '',
-        prizeTags: List<String>.from((json["prize_tags"] ?? []).map((x) => x)),
+        prizeName: readString(json["prize_name"], ''),
+        prizeDescription: readString(json["prize_description"], ''),
+        prizeImageUrl: readString(json["prize_image_url"], ''),
+        prizeTags: readStringList(json["prize_tags"]),
         expiresAt: json["expires_at"],
       );
 

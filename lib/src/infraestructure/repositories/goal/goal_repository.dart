@@ -34,9 +34,15 @@ class GoalRepositoryImpl extends GoalRepository {
     required List<String> tags,
     required String distictId,
     int page = 1,
+    bool? includeEnded,
   }) {
     return datasource.getGoalsParticipant(
-        token: token, distictId: distictId, tags: tags, page: page);
+        token: token,
+        distictId: distictId,
+        tags: tags,
+        page: page,
+        includeEnded: includeEnded,
+    );
   }
 
   @override

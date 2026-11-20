@@ -1,4 +1,9 @@
 class IndexGoals {
+  /// JSON original del ítem tal como lo devolvió el backend. Su contenido
+  /// depende de la campaign (campos propios, configuración, metadatos del
+  /// proveedor…), así que se conserva completo para que cada app lea lo suyo.
+  final Map<String, dynamic> raw;
+
   final String id;
   final num activityTime;
   final num acceptancesCount;
@@ -22,6 +27,7 @@ class IndexGoals {
   final Map<String, dynamic> goalData;
 
   IndexGoals({
+    this.raw = const {},
     required this.id,
     required this.acceptancesCount,
     required this.activityTime,

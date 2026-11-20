@@ -58,10 +58,12 @@ class PrizeRepositoryImpl extends PrizeRepository {
   Future<CouponRedeemResult> redeemCoupon({
     required String couponId,
     required String distinctId,
+    Map<String, dynamic>? opts,
   }) {
     return datasource.redeemCoupon(
       couponId: couponId,
       distinctId: distinctId,
+      opts: opts,
     );
   }
 

@@ -21,7 +21,7 @@ class TiendaResponse {
         total: json["total"],
         count: json["count"],
         nextCursor: json["nextCursor"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+        items: [for (final x in (json["items"] is List ? json["items"] as List : const [])) if (x is Map) Item.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {

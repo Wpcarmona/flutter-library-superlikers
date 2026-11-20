@@ -56,6 +56,8 @@ class DataStatus {
 }
 
 class GoalStatus {
+  Map<String, dynamic> raw;
+
   String id;
   DateTime createdAt;
   String goalId;
@@ -115,6 +117,7 @@ class GoalStatus {
   bool conditionsFailure;
 
   GoalStatus({
+    this.raw = const {},
     required this.id,
     required this.createdAt,
     required this.goalId,
@@ -175,6 +178,7 @@ class GoalStatus {
   });
 
   factory GoalStatus.fromJson(Map<String, dynamic> json) => GoalStatus(
+        raw: json,
         id: json["_id"] ?? '',
         createdAt: DateTime.tryParse(json["created_at"] ?? '') ?? DateTime(1970),
         goalId: json["goal_id"] ?? '',

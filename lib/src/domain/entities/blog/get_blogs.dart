@@ -25,6 +25,11 @@ class GetBlogsData {
 }
 
 class BlogPost {
+  /// JSON original del ítem tal como lo devolvió el backend. Su contenido
+  /// depende de la campaign (campos propios, configuración, metadatos del
+  /// proveedor…), así que se conserva completo para que cada app lea lo suyo.
+  final Map<String, dynamic> raw;
+
   final String id;
   final bool admin;
   final bool archived;
@@ -59,6 +64,7 @@ class BlogPost {
   final String? videoCoverUrl;
 
   BlogPost({
+    this.raw = const {},
     required this.id,
     required this.admin,
     required this.archived,

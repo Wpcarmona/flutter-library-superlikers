@@ -67,6 +67,24 @@ class ExternalDatasourceImpl extends ExternalDatasource {
   }
 
   @override
+  Future<ExternalFormField> getExternalFormFieldBySlug({
+    required String token,
+    required String slug,
+  }) async {
+    final response = await dio.post(
+      '/external_forms/actions/fields_info',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      data: {
+        'api_key': Environment.apiKey,
+        'campaign': Environment.campaign,
+        'slug': slug,
+      },
+    );
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
+    return _jsonToExternalFormField(responseData);
+  }
+
+  @override
   Future<List<ExternalFormList>> getExternalFormListByCategory({
     required String token,
     required String category,

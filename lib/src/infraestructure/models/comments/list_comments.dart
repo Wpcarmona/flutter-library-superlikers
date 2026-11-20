@@ -35,7 +35,7 @@ class ListCommentsData {
         totalPages: json["total_pages"] ?? 0,
         totalData: json["total_data"] ?? 0,
         comments: json["comments"] != null
-            ? List<CommentModel>.from(json["comments"].map((x) => CommentModel.fromJson(x)))
+            ? [for (final x in (json["comments"] is List ? json["comments"] as List : const [])) if (x is Map) CommentModel.fromJson(Map<String, dynamic>.from(x))]
             : [],
       );
 

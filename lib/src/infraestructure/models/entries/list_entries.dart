@@ -1,3 +1,4 @@
+import '../utils/json_read.dart';
 import 'dart:convert';
 
 EntriesResponseApi activeChallengesResponseFromJson(String str) =>
@@ -16,8 +17,8 @@ class EntriesResponseApi {
   });
 
   factory EntriesResponseApi.fromJson(Map<String, dynamic> json) => EntriesResponseApi(
-        ok: json["ok"] ?? '',
-        data: ActiveChallengesResponseData.fromJson(json["data"]),
+        ok: readString(json["ok"], ''),
+        data: ActiveChallengesResponseData.fromJson(readMap(json["data"])),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,10 +40,9 @@ class ActiveChallengesResponseData {
 
   factory ActiveChallengesResponseData.fromJson(Map<String, dynamic> json) =>
       ActiveChallengesResponseData(
-        previousPageToken: json["previous_page_token"]?.toDouble() ?? 0.0,
-        nextPageToken: json["next_page_token"]?.toDouble() ?? 0.0,
-        entries: List<EntriesActiviyResponse>.from(
-            json["entries"].map((x) => EntriesActiviyResponse.fromJson(x))),
+        previousPageToken: readDouble(json["previous_page_token"]),
+        nextPageToken: readDouble(json["next_page_token"]),
+        entries: [for (final x in (json["entries"] is List ? json["entries"] as List : const [])) if (x is Map) EntriesActiviyResponse.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,6 +63,8 @@ EntryData _parseEntryData(Map<String, dynamic> json) {
 }
 
 class EntriesActiviyResponse {
+  Map<String, dynamic> raw;
+
   int activityCount;
   String category;
   DateTime createdAt;
@@ -82,6 +84,7 @@ class EntriesActiviyResponse {
   EntryRedemptionResponse? redemption;
 
   EntriesActiviyResponse({
+    this.raw = const {},
     required this.activityCount,
     required this.category,
     required this.createdAt,
@@ -102,26 +105,27 @@ class EntriesActiviyResponse {
   });
 
   factory EntriesActiviyResponse.fromJson(Map<String, dynamic> json) => EntriesActiviyResponse(
+        raw: json,
         activityCount: (json["activity_count"] as num?)?.toInt() ?? 0,
-        category: json["category"] ?? "",
-        createdAt: DateTime.parse(json["created_at"]),
-        moderation: json["moderation"] ?? "",
+        category: readString(json["category"], ""),
+        createdAt: readDate(json["created_at"]),
+        moderation: readString(json["moderation"], ""),
         points: (json["points"] as num?) ?? 0,
-        state: json["state"] ?? "",
-        id: json["id"] ?? "",
-        slug: json["slug"] ?? "",
-        name: json["name"] ?? "",
+        state: readString(json["state"], ""),
+        id: readString(json["id"], ""),
+        slug: readString(json["slug"], ""),
+        name: readString(json["name"], ""),
         participant: json["participant"] != null
-            ? ParticipantDataEntries.fromJson(json["participant"])
+            ? ParticipantDataEntries.fromJson(readMap(json["participant"]))
             : ParticipantDataEntries(id: '', email: '', name: '', avatar: '', uid: ''),
-        asForm: json["as_form"] ?? false,
+        asForm: readBool(json["as_form"], false),
         data: _parseEntryData(json),
-        prize: json["prize"] != null ? EntryPrizeResponse.fromJson(json["prize"]) : null,
-        redemptionState: json["redemption_state"],
-        source: json["source"],
-        gift: json["gift"] ?? false,
+        prize: json["prize"] != null ? EntryPrizeResponse.fromJson(readMap(json["prize"])) : null,
+        redemptionState: readStringOrNull(json["redemption_state"]),
+        source: readStringOrNull(json["source"]),
+        gift: readBool(json["gift"], false),
         redemption: json["redemption"] != null
-            ? EntryRedemptionResponse.fromJson(json["redemption"])
+            ? EntryRedemptionResponse.fromJson(readMap(json["redemption"]))
             : null,
       );
 
@@ -164,14 +168,14 @@ class EntryRedemptionResponse {
   });
 
   factory EntryRedemptionResponse.fromJson(Map<String, dynamic> json) => EntryRedemptionResponse(
-        id: json["_id"] ?? '',
+        id: readString(json["_id"], ''),
         createdAt: json["created_at"] != null
             ? DateTime.parse(json["created_at"])
             : DateTime.now(),
         points: (json["points"] as num?) ?? 0,
-        prizeName: json["prize_name"],
-        code: json["code"],
-        state: json["state"],
+        prizeName: readStringOrNull(json["prize_name"]),
+        code: readStringOrNull(json["code"]),
+        state: readStringOrNull(json["state"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -224,26 +228,26 @@ class EntryPrizeResponse {
   });
 
   factory EntryPrizeResponse.fromJson(Map<String, dynamic> json) => EntryPrizeResponse(
-        id: json["_id"] ?? '',
-        type: json["_type"] ?? '',
-        category: json["category"] ?? '',
-        description: json["description"] ?? '',
-        name: json["name"] ?? '',
+        id: readString(json["_id"], ''),
+        type: readString(json["_type"], ''),
+        category: readString(json["category"], ''),
+        description: readString(json["description"], ''),
+        name: readString(json["name"], ''),
         points: (json["points"] as num?) ?? 0,
-        imageUrl: json["image_url"] ?? '',
-        prizeImageUrl: json["prize_image_url"] ?? '',
-        redeemable: json["redeemable"] ?? false,
+        imageUrl: readString(json["image_url"], ''),
+        prizeImageUrl: readString(json["prize_image_url"], ''),
+        redeemable: readBool(json["redeemable"], false),
         tags: json["tags"] != null
             ? List<String>.from(json["tags"].map((x) => x.toString()))
             : [],
-        tc: json["tc"] ?? '',
+        tc: readString(json["tc"], ''),
         quantity: (json["quantity"] as num?) ?? 0,
         quantityAvailable: (json["quantity_available"] as num?) ?? 0,
         expirationDays: (json["expiration_days"] as num?) ?? 0,
-        unlimited: json["unlimited"] ?? false,
-        eid: json["eid"],
+        unlimited: readBool(json["unlimited"], false),
+        eid: readStringOrNull(json["eid"]),
         prizeDetails: json["prize_details"] != null
-            ? EntryPrizeDetailsResponse.fromJson(json["prize_details"])
+            ? EntryPrizeDetailsResponse.fromJson(readMap(json["prize_details"]))
             : null,
       );
 
@@ -312,11 +316,11 @@ class ParticipantDataEntries {
   });
 
   factory ParticipantDataEntries.fromJson(Map<String, dynamic> json) => ParticipantDataEntries(
-        id: json["id"] ?? json["_id"] ?? '',
-        email: json["email"] ?? '',
-        name: json["name"] ?? '',
-        avatar: json["avatar"] ?? '',
-        uid: json["uid"] ?? '',
+        id: readString(json["id"], json["_id"] ?? ''),
+        email: readString(json["email"], ''),
+        name: readString(json["name"], ''),
+        avatar: readString(json["avatar"], ''),
+        uid: readString(json["uid"], ''),
       );
 
   Map<String, dynamic> toJson() => {

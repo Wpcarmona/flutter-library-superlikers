@@ -62,6 +62,7 @@ class BlogMapper {
       totalPages: response.data.totalPages,
       totalData: response.data.totalData,
       blogPosts: response.data.blogPosts.map((blog) => domain.BlogPost(
+        raw: blog.raw,
         id: blog.id,
         admin: blog.admin,
         archived: blog.archived,

@@ -39,7 +39,7 @@ class ParticipantReferralsResponse {
         totalPages: json["total_pages"] ?? 0,
         totalData: json["total_data"] ?? 0,
         data: json["data"] != null
-            ? List<ReferralModel>.from(json["data"].map((x) => ReferralModel.fromJson(x)))
+            ? [for (final x in (json["data"] is List ? json["data"] as List : const [])) if (x is Map) ReferralModel.fromJson(Map<String, dynamic>.from(x))]
             : [],
       );
 

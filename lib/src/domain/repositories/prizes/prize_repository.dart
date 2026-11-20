@@ -25,9 +25,12 @@ abstract class PrizeRepository {
 
   /// Genera (redime) un cupón para el premio [couponId], devolviendo el
   /// código de canje en [CouponRedeemResult.code].
+  /// [opts] se envía tal cual al proveedor del cupón (p. ej. la marca o
+  /// sucursal elegida con [getCouponExternalData]).
   Future<CouponRedeemResult> redeemCoupon({
     required String couponId,
     required String distinctId,
+    Map<String, dynamic>? opts,
   });
 
   /// Datos externos de un cupón (`POST /coupons/{couponId}/external/{key}`),

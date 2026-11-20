@@ -4,6 +4,7 @@ import '../../models/models.dart' as infra;
 class PrizesMapper {
   static domain.Reward rewardToEntity(infra.ObjectReward reward) {
     return domain.Reward(
+        raw: reward.raw,
       id: reward.id,
       type: reward.type,
       description: reward.description,
@@ -56,6 +57,7 @@ class PrizesMapper {
       ok: response.ok,
       coupon: rewardToEntity(response.object.coupon),
       redemption: domain.CouponRedemption(
+        raw: response.object.redemption.raw,
         id: response.object.redemption.id,
         redeemId: response.object.redemption.redeemId,
         prizeName: response.object.redemption.prizeName,

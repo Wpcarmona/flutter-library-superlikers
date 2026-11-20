@@ -14,6 +14,14 @@ abstract class ExternalRepository {
     required String externalActionId,
   });
 
+  /// Igual que [getExternalFormField], pero identifica la external action
+  /// por su `slug` (el que se configura en el administrador) en vez de por
+  /// su id.
+  Future<ExternalFormField> getExternalFormFieldBySlug({
+    required String token,
+    required String slug,
+  });
+
   /// Atajo para cuando no hace falta decidir entre varias external actions
   /// de la misma [category]: busca la primera (vía
   /// [getExternalFormListByCategory]) y trae sus fields (vía

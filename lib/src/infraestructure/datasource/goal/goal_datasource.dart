@@ -71,6 +71,7 @@ class GoalDatasourceImpl extends GoalDatasource {
     required List<String> tags,
     required String distictId,
     int page = 1,
+    bool? includeEnded,
   }) async {
     final response = await dio.post(
       '/participants/goals',
@@ -81,6 +82,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'distinct_id': distictId,
         'tags': tags,
         'page': page,
+        'include_ended': ?includeEnded,
       },
     );
     final Map<String, dynamic> responseData = decodeJsonBody(response);

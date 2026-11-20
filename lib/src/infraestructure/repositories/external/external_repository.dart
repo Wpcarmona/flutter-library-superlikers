@@ -34,6 +34,14 @@ class ExternalRepositoryImpl extends ExternalRepository {
   }
 
   @override
+  Future<ExternalFormField> getExternalFormFieldBySlug({
+    required String token,
+    required String slug,
+  }) {
+    return datasource.getExternalFormFieldBySlug(token: token, slug: slug);
+  }
+
+  @override
   Future<ExternalFormField> getExternalFormFieldByCategory({
     required String token,
     required String category,

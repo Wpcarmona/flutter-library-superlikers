@@ -9,7 +9,7 @@ class ListMetricsResponse {
 
   factory ListMetricsResponse.fromJson(Map<String, dynamic> json) => ListMetricsResponse(
         ok: json["ok"],
-        data: List<DatumListMetrics>.from(json["data"].map((x) => DatumListMetrics.fromJson(x))),
+        data: [for (final x in (json["data"] is List ? json["data"] as List : const [])) if (x is Map) DatumListMetrics.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,7 +50,7 @@ class DatumListMetrics {
         coll: json["coll"],
         targetProperty: json["target_property"],
         analysisType: json["analysis_type"],
-        filter: List<FilterListMetricsResponse>.from(json["filter"].map((x) => FilterListMetricsResponse.fromJson(x))),
+        filter: [for (final x in (json["filter"] is List ? json["filter"] as List : const [])) if (x is Map) FilterListMetricsResponse.fromJson(Map<String, dynamic>.from(x))],
         useGoals: json["use_goals"],
         goalsRelatedInfo: List<dynamic>.from(json["goals_related_info"].map((x) => x)),
         slug: json["slug"],

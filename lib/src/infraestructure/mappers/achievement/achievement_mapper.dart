@@ -15,6 +15,7 @@ class AchievementMapper {
 
   static domain.Achievements _itemToEntity(infra.Achievement item) {
     return domain.Achievements(
+        raw: item.raw,
       id: item.id,
       type: item.type,
       state: item.state,

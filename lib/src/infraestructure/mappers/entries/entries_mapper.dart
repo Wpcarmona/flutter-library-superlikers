@@ -10,6 +10,7 @@ class EntriesMapper {
         previousPageToken: response.data.previousPageToken,
         entries: response.data.entries
             .map((e) => domain.ListEntriesResponse(
+        raw: e.raw,
                   activityCount: e.activityCount,
                   category: e.category,
                   createdAt: e.createdAt.toLocal().toIso8601String(),

@@ -1,3 +1,22 @@
+## 0.6.0
+
+* New `raw` map (the item's original JSON) on `GoalsParticipant`, `IndexGoals`, `Achievements`,
+  `ListEntriesResponse`, `Reward`, `CouponRedemption` and `BlogPost`. Their content depends on
+  each campaign (goal configuration, entry invoices, the prize provider's metadata such as
+  brands/zones/sites, coupon download URLs, `voted`…), so apps can read their own fields without
+  the library having to model every campaign. Typed fields are unchanged.
+* `GoalRepository.getGoalsParticipant` gets an optional `includeEnded` (`include_ended`).
+* New `ExternalRepository.getExternalFormFieldBySlug` (`fields_info` by the action's `slug`).
+* `PrizesRepository.redeemCoupon` gets optional `opts`, sent as-is to the coupon provider (e.g.
+  the brand/site chosen with `getCouponExternalData`).
+* Tolerant parsing (new `readString`/`readInt`/`readBool`/`readDate`/… helpers) in rewards,
+  coupons, achievements, entries and blogs: missing fields, numbers/booleans sent as strings or
+  `0/1`, invalid dates and missing lists/objects no longer throw. Notably `metadata.localizable`
+  sent as a number used to throw a `TypeError` while listing rewards.
+* Callers are unaffected; custom `GoalDatasource`/`GoalRepository`/`ExternalDatasource`/
+  `ExternalRepository`/`PrizesDatasource`/`PrizesRepository` implementations must update their
+  overrides and implement `getExternalFormFieldBySlug`.
+
 ## 0.5.0
 
 * Response decoding is now shared and tolerant: every datasource uses the new public

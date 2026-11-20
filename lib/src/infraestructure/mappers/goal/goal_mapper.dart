@@ -3,6 +3,7 @@ import '../../models/models.dart' as infra;
 
 class GoalMapper {
   static domain.IndexGoals getGoalIndexToEntity(infra.GoalIndex goal) => domain.IndexGoals(
+        raw: goal.raw,
         id: goal.id,
         name: goal.name,
         description: goal.desc,
@@ -27,6 +28,7 @@ class GoalMapper {
       );
 
   static domain.GoalsParticipant getGoalsToEntity(infra.GoalStatus goal) => domain.GoalsParticipant(
+        raw: goal.raw,
         id: goal.id,
         userId: goal.participationId,
         goalId: goal.goalId,

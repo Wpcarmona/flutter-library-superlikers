@@ -111,7 +111,7 @@ class FieldEntityModel {
         uniqueField: json["unique_field"] ?? false,
         format: json["format"],
         choices: json["choices"] != null
-            ? List<ChoiceEntity>.from(json["choices"].map((x) => ChoiceEntity.fromJson(x)))
+            ? [for (final x in (json["choices"] is List ? json["choices"] as List : const [])) if (x is Map) ChoiceEntity.fromJson(Map<String, dynamic>.from(x))]
             : null,
         properties: Map<String, dynamic>.from(json)
           ..removeWhere((key, _) => _knownFieldKeys.contains(key)),

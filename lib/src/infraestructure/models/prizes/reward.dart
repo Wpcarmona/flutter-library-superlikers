@@ -1,3 +1,5 @@
+import '../utils/json_read.dart';
+
 class RewardResponse {
   String ok;
   int page;
@@ -16,12 +18,12 @@ class RewardResponse {
   });
 
   factory RewardResponse.fromJson(Map<String, dynamic> json) => RewardResponse(
-        ok: json["ok"],
-        page: json["page"],
-        pageSize: json["page_size"],
-        totalPages: json["total_pages"],
-        totalData: json["total_data"],
-        object: List<ObjectReward>.from(json["object"].map((x) => ObjectReward.fromJson(x))),
+        ok: readString(json["ok"]),
+        page: readInt(json["page"]),
+        pageSize: readInt(json["page_size"]),
+        totalPages: readInt(json["total_pages"]),
+        totalData: readInt(json["total_data"]),
+        object: [for (final x in (json["object"] is List ? json["object"] as List : const [])) if (x is Map) ObjectReward.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,6 +37,8 @@ class RewardResponse {
 }
 
 class ObjectReward {
+  Map<String, dynamic> raw;
+
   String id;
   String type;
   String category;
@@ -76,6 +80,7 @@ class ObjectReward {
   bool isCustomPrize;
 
   ObjectReward({
+    this.raw = const {},
     required this.id,
     required this.type,
     required this.category,
@@ -118,49 +123,50 @@ class ObjectReward {
   });
 
   factory ObjectReward.fromJson(Map<String, dynamic> json) => ObjectReward(
-        id: json["_id"] ?? '',
-        type: json["_type"] ?? '',
-        category: json["category"] ?? '',
-        description: json["description"] ?? '',
-        expirationDays: json["expiration_days"] ?? 0,
-        name: json["name"] ?? '',
-        points: json["points"] ?? 0,
-        prizeImageUrl: json["prize_image_url"] ?? '',
-        quantity: json["quantity"] ?? 0,
+        raw: json,
+        id: readString(json["_id"], ''),
+        type: readString(json["_type"], ''),
+        category: readString(json["category"], ''),
+        description: readString(json["description"], ''),
+        expirationDays: readInt(json["expiration_days"], 0),
+        name: readString(json["name"], ''),
+        points: readInt(json["points"], 0),
+        prizeImageUrl: readString(json["prize_image_url"], ''),
+        quantity: readInt(json["quantity"], 0),
         quantityLimitTimeframe: json["quantity_limit_timeframe"],
-        redeemable: json["redeemable"] ?? false,
-        requireRedemptionToken: json["require_redemption_token"] ?? false,
-        tags: List<String>.from((json["tags"] ?? []).map((x) => x)),
-        tc: json["tc"] ?? '',
-        unlimited: json["unlimited"] ?? false,
-        usePointType: json["use_point_type"] ?? false,
-        userLimit: json["user_limit"] ?? 0,
-        userLimitTimeframe: json["user_limit_timeframe"] ?? '',
-        filter: List<dynamic>.from((json["filter"] ?? []).map((x) => x)),
-        quantityAvailable: json["quantity_available"] ?? 0,
-        imageUrl: json["image_url"] ?? json["prize_image_url"] ?? '',
+        redeemable: readBool(json["redeemable"], false),
+        requireRedemptionToken: readBool(json["require_redemption_token"], false),
+        tags: readStringList(json["tags"]),
+        tc: readString(json["tc"], ''),
+        unlimited: readBool(json["unlimited"], false),
+        usePointType: readBool(json["use_point_type"], false),
+        userLimit: readInt(json["user_limit"], 0),
+        userLimitTimeframe: readString(json["user_limit_timeframe"], ''),
+        filter: (json["filter"] is List ? List<dynamic>.from(json["filter"] as List) : <dynamic>[]),
+        quantityAvailable: readInt(json["quantity_available"], 0),
+        imageUrl: readString(json["image_url"], json["prize_image_url"] ?? ''),
         pointType: json["point_type"],
         pointTypeId: json["point_type_id"],
         sponsor: json["sponsor"],
         sponsorId: json["sponsor_id"],
-        size: json["size"] ?? 0,
-        useCodesVault: json["use_codes_vault"] ?? false,
-        available: json["available"] ?? true,
-        isCouponPrize: json["is_coupon_prize"] ?? false,
-        redeemUrl: json["redeem_url"] ?? '',
-        eid: json["eid"] ?? '',
-        addonId: json["addon_id"] ?? '',
+        size: readInt(json["size"], 0),
+        useCodesVault: readBool(json["use_codes_vault"], false),
+        available: readBool(json["available"], true),
+        isCouponPrize: readBool(json["is_coupon_prize"], false),
+        redeemUrl: readString(json["redeem_url"], ''),
+        eid: readString(json["eid"], ''),
+        addonId: readString(json["addon_id"], ''),
         metadata: json["metadata"] != null
-            ? MetadataReward.fromJson(json["metadata"])
+            ? MetadataReward.fromJson(readMap(json["metadata"]))
             : MetadataReward.empty(),
         prizeDetails: json["prize_details"] != null
-            ? PrizeDetails.fromJson(json["prize_details"])
+            ? PrizeDetails.fromJson(readMap(json["prize_details"]))
             : PrizeDetails.empty(),
-        extraFields: List<dynamic>.from((json["extra_fields"] ?? []).map((x) => x)),
-        isExternalCouponPrize: json["is_external_coupon_prize"] ?? false,
-        customData: List<dynamic>.from((json["custom_data"] ?? []).map((x) => x)),
-        shipping: json["shipping"] ?? false,
-        isCustomPrize: json["is_custom_prize"] ?? false,
+        extraFields: (json["extra_fields"] is List ? List<dynamic>.from(json["extra_fields"] as List) : <dynamic>[]),
+        isExternalCouponPrize: readBool(json["is_external_coupon_prize"], false),
+        customData: (json["custom_data"] is List ? List<dynamic>.from(json["custom_data"] as List) : <dynamic>[]),
+        shipping: readBool(json["shipping"], false),
+        isCustomPrize: readBool(json["is_custom_prize"], false),
       );
 
   Map<String, dynamic> toJson() => {
@@ -228,16 +234,16 @@ class MetadataReward {
   });
 
   factory MetadataReward.fromJson(Map<String, dynamic> json) => MetadataReward(
-        name: json["name"] ?? '',
-        description: json["description"] ?? '',
-        termsAndConditions: json["terms_and_conditions"] ?? '',
-        image: json["image"] ?? '',
-        localizable: json["localizable"] ?? false,
-        cities: List<dynamic>.from((json["cities"] ?? []).map((x) => x)),
+        name: readString(json["name"], ''),
+        description: readString(json["description"], ''),
+        termsAndConditions: readString(json["terms_and_conditions"], ''),
+        image: readString(json["image"], ''),
+        localizable: readBool(json["localizable"], false),
+        cities: (json["cities"] is List ? List<dynamic>.from(json["cities"] as List) : <dynamic>[]),
         prizeDetails: json["prize_details"] != null
-            ? PrizeDetails.fromJson(json["prize_details"])
+            ? PrizeDetails.fromJson(readMap(json["prize_details"]))
             : PrizeDetails.empty(),
-        extraFields: List<dynamic>.from((json["extra_fields"] ?? []).map((x) => x)),
+        extraFields: (json["extra_fields"] is List ? List<dynamic>.from(json["extra_fields"] as List) : <dynamic>[]),
       );
 
   factory MetadataReward.empty() => MetadataReward(
@@ -273,8 +279,8 @@ class PrizeDetails {
   });
 
   factory PrizeDetails.fromJson(Map<String, dynamic> json) => PrizeDetails(
-        value: json["value"] ?? '',
-        description: json["description"] ?? '',
+        value: readString(json["value"], ''),
+        description: readString(json["description"], ''),
       );
 
   factory PrizeDetails.empty() => PrizeDetails(value: '', description: '');

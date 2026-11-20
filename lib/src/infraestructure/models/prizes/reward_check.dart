@@ -51,7 +51,7 @@ class ExtraForm {
 
   factory ExtraForm.fromJson(Map<String, dynamic> json) => ExtraForm(
         formName: json["form_name"],
-        fields: List<Field>.from(json["fields"].map((x) => Field.fromJson(x))),
+        fields: [for (final x in (json["fields"] is List ? json["fields"] as List : const [])) if (x is Map) Field.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {

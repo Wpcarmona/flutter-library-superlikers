@@ -10,7 +10,7 @@ class ParticipantListResponse {
       ParticipantListResponse(
         ok: json["ok"]?.toString() ?? 'true',
         data: json["data"] != null
-            ? List<Participant>.from(json["data"].map((x) => Participant.fromJson(x)))
+            ? [for (final x in (json["data"] is List ? json["data"] as List : const [])) if (x is Map) Participant.fromJson(Map<String, dynamic>.from(x))]
             : [],
       );
 

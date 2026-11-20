@@ -106,6 +106,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
   Future<CouponRedeemResult> redeemCoupon({
     required String couponId,
     required String distinctId,
+    Map<String, dynamic>? opts,
   }) async {
     final response = await dio.post(
       '/coupons/$couponId/create',
@@ -113,6 +114,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
         'distinct_id': distinctId,
+        'opts': ?opts,
       },
     );
     final Map<String, dynamic> responseData = decodeJsonBody(response);

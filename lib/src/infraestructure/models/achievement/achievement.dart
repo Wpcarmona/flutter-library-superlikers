@@ -1,3 +1,5 @@
+import '../utils/json_read.dart';
+
 class AchievementResponse {
   String ok;
   DataAchievement data;
@@ -8,8 +10,8 @@ class AchievementResponse {
   });
 
   factory AchievementResponse.fromJson(Map<String, dynamic> json) => AchievementResponse(
-        ok: json["ok"],
-        data: DataAchievement.fromJson(json["data"]),
+        ok: readString(json["ok"]),
+        data: DataAchievement.fromJson(readMap(json["data"])),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +34,7 @@ class DataAchievement {
   factory DataAchievement.fromJson(Map<String, dynamic> json) => DataAchievement(
         previousPageToken: json["previous_page_token"]?.toDouble() ?? 0.0,
         nextPageToken: json["next_page_token"]?.toDouble() ?? 0.0,
-        achievements: List<Achievement>.from((json["achievements"] ?? []).map((x) => Achievement.fromJson(x))),
+        achievements: [for (final x in (json["achievements"] is List ? json["achievements"] as List : const [])) if (x is Map) Achievement.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +45,8 @@ class DataAchievement {
 }
 
 class Achievement {
+  Map<String, dynamic> raw;
+
   String id;
   String type;
   String state;
@@ -79,6 +83,7 @@ class Achievement {
   String goalImageUrl;
 
   Achievement({
+    this.raw = const {},
     required this.id,
     required this.type,
     required this.state,
@@ -116,40 +121,41 @@ class Achievement {
   });
 
   factory Achievement.fromJson(Map<String, dynamic> json) => Achievement(
-        id: json["_id"],
-        type: json["_type"],
-        state: json["state"],
-        tags: List<String>.from(json["tags"].map((x) => x)),
-        createdAt: DateTime.parse(json["created_at"]),
-        participant: ParticipantAchievement.fromJson(json["participant"]),
-        activityFilter: List<String>.from(json["activity_filter"].map((x) => x)),
-        activityTarget: json["activity_target"],
+        raw: json,
+        id: readString(json["_id"]),
+        type: readString(json["_type"]),
+        state: readString(json["state"]),
+        tags: readStringList(json["tags"]),
+        createdAt: readDate(json["created_at"]),
+        participant: ParticipantAchievement.fromJson(readMap(json["participant"])),
+        activityFilter: readStringList(json["activity_filter"]),
+        activityTarget: readString(json["activity_target"]),
         consolationRewardId: json["consolation_reward_id"],
         consolationRewardName: json["consolation_reward_name"],
         consolationRewardType: json["consolation_reward_type"],
-        participantFilter: List<dynamic>.from(json["participant_filter"].map((x) => x)),
-        participantMetricName: json["participant_metric_name"],
-        participantMetricTimeframe: json["participant_metric_timeframe"],
-        participantMetricValue: json["participant_metric_value"],
-        period: json["period"],
+        participantFilter: (json["participant_filter"] is List ? List<dynamic>.from(json["participant_filter"] as List) : <dynamic>[]),
+        participantMetricName: readStringOrNull(json["participant_metric_name"]),
+        participantMetricTimeframe: readStringOrNull(json["participant_metric_timeframe"]),
+        participantMetricValue: readIntOrNull(json["participant_metric_value"]),
+        period: readString(json["period"]),
         primaryRewardType: json["primary_reward_type"],
-        rewardName: json["reward_name"],
-        rewardType: json["reward_type"],
+        rewardName: readString(json["reward_name"]),
+        rewardType: readString(json["reward_type"]),
         secondaryParticipantMetricName: json["secondary_participant_metric_name"],
         secondaryParticipantMetricTimeframe: json["secondary_participant_metric_timeframe"],
         secondaryRewardId: json["secondary_reward_id"],
         secondaryRewardName: json["secondary_reward_name"],
         secondaryRewardType: json["secondary_reward_type"],
-        totalConsolationReward: json["total_consolation_reward"],
-        totalPrimaryReward: json["total_primary_reward"],
-        totalReward: json["total_reward"],
-        totalSecondaryReward: json["total_secondary_reward"],
-        useParticipantMetrics: json["use_participant_metrics"],
+        totalConsolationReward: readIntOrNull(json["total_consolation_reward"]),
+        totalPrimaryReward: readIntOrNull(json["total_primary_reward"]),
+        totalReward: readInt(json["total_reward"]),
+        totalSecondaryReward: readIntOrNull(json["total_secondary_reward"]),
+        useParticipantMetrics: readBool(json["use_participant_metrics"]),
         goalStartPeriod: json["goal_start_period"] != null ? DateTime.parse(json["goal_start_period"]) : null,
         goalEndPeriod: json["goal_end_period"] != null ? DateTime.parse(json["goal_end_period"]) : null,
-        goalId: json["goal_id"],
-        goalName: json["goal_name"],
-        goalImageUrl: json["goal_image_url"],
+        goalId: readString(json["goal_id"]),
+        goalName: readString(json["goal_name"]),
+        goalImageUrl: readString(json["goal_image_url"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -204,10 +210,10 @@ class ParticipantAchievement {
   });
 
   factory ParticipantAchievement.fromJson(Map<String, dynamic> json) => ParticipantAchievement(
-        name: json["name"],
-        id: json["id"],
-        uid: json["uid"],
-        email: json["email"],
+        name: readString(json["name"]),
+        id: readString(json["id"]),
+        uid: readString(json["uid"]),
+        email: readString(json["email"]),
       );
 
   Map<String, dynamic> toJson() => {

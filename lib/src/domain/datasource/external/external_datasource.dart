@@ -14,6 +14,14 @@ abstract class ExternalDatasource {
     required String externalActionId,
   });
 
+  /// Igual que [getExternalFormField], pero identifica la external action
+  /// por su `slug` (el que se configura en el administrador) en vez de por
+  /// su id.
+  Future<ExternalFormField> getExternalFormFieldBySlug({
+    required String token,
+    required String slug,
+  });
+
   Future<CreateActivityExternal> createActivityExternal({
     required String distinctId,
     required String event,

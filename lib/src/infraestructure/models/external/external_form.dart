@@ -45,7 +45,7 @@ class DataExternalForm {
         pageSize: json["page_size"],
         totalPages: json["total_pages"],
         totalData: json["total_data"],
-        externals: List<External>.from(json["externals"].map((x) => External.fromJson(x))),
+        externals: [for (final x in (json["externals"] is List ? json["externals"] as List : const [])) if (x is Map) External.fromJson(Map<String, dynamic>.from(x))],
       );
 
   Map<String, dynamic> toJson() => {

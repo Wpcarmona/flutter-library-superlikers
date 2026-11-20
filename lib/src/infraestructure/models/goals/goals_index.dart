@@ -59,6 +59,8 @@ class DataGoalIndex {
 }
 
 class GoalIndex {
+  Map<String, dynamic> raw;
+
   String id;
   int acceptancesCount;
   String activityTarget;
@@ -126,6 +128,7 @@ class GoalIndex {
   GoalIndexData goalData;
 
   GoalIndex({
+    this.raw = const {},
     required this.id,
     required this.acceptancesCount,
     required this.activityTarget,
@@ -194,6 +197,7 @@ class GoalIndex {
   });
 
   factory GoalIndex.fromJson(Map<String, dynamic> json) => GoalIndex(
+        raw: json,
         id: json["_id"] ?? '',
         acceptancesCount: json["acceptances_count"] ?? 0,
         activityTarget: json["activity_target"] ?? '',
