@@ -44,6 +44,7 @@ class ParticipantRepositoryImpl extends ParticipantRepository {
     String? fcmToken,
     String? autorizationNumber,
     String? referralsCode,
+    Map<String, dynamic>? properties,
   }) {
     return datasource.updateUser(
       token: token,
@@ -54,6 +55,7 @@ class ParticipantRepositoryImpl extends ParticipantRepository {
       fcmToken: fcmToken,
       autorizationNumber: autorizationNumber,
       referralsCode: referralsCode,
+      properties: properties,
     );
   }
 
@@ -61,8 +63,15 @@ class ParticipantRepositoryImpl extends ParticipantRepository {
   Future<List<Participant>> searchParticipants({
     required String token,
     List<String>? tags,
+    bool? withAdmins,
+    bool? exactTags,
   }) {
-    return datasource.searchParticipants(token: token, tags: tags);
+    return datasource.searchParticipants(
+      token: token,
+      tags: tags,
+      withAdmins: withAdmins,
+      exactTags: exactTags,
+    );
   }
 
   @override

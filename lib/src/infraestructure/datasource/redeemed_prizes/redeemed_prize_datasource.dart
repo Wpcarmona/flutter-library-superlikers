@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import '../../../domain/domain.dart';
+import '../../../network/json_body.dart';
 import '../../../network/pinned_dio.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
@@ -19,10 +18,7 @@ class RedeemedPrizeDatasourceImpl extends RedeemedPrizeDatasource {
       '/',
       queryParameters: {'category': category},
     );
-    final raw = response.data;
-    final Map<String, dynamic> responseData = raw is String
-        ? jsonDecode(raw) as Map<String, dynamic>
-        : Map<String, dynamic>.from(raw as Map);
+    final responseData = decodeJsonBody(response);
 
     final parsed = RedeemedPrizesResponse.fromJson(responseData);
     return parsed.data.map(RedeemedPrizesMapper.redeemedPrizeToEntity).toList();

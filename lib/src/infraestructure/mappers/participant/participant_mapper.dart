@@ -45,8 +45,14 @@ class ParticipantMapper {
   ) =>
       domain.AdvancedRanking(
         firstName: response.data.firstName,
-        name: response.data.data.nombres,
-        lastName: response.data.data.apellidos,
+        // `nombres`/`apellidos` solo existen en algunos schemas; si no
+        // vienen, se usan los campos estándar del ranking.
+        name: response.data.data.nombres.isNotEmpty
+            ? response.data.data.nombres
+            : response.data.name,
+        lastName: response.data.data.apellidos.isNotEmpty
+            ? response.data.data.apellidos
+            : response.data.lastName,
         votes: response.data.votes,
         points: response.data.points,
         rankingPoints: response.data.level,
@@ -54,7 +60,7 @@ class ParticipantMapper {
         pointsByPtype: {},
         colour: response.data.colour,
         ranking: response.data.ranking,
-        data: {},
+        data: {...response.data.data.toJson(), ...response.data.rawData},
       );
 
   static domain.UpdateAvatar updateAvatarToEntity(

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,6 +6,7 @@ import '../../../config/environment.dart';
 import '../../../domain/datasource/blog/blog_datasource.dart';
 import '../../../domain/entities/blog/blog.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/blog/blog_mapper.dart';
 import '../../models/blog/blog.dart';
 
@@ -37,9 +37,6 @@ class BlogDatasourceImpl extends BlogDatasource {
     final updateBlogResponse = UpdateBlogResponse.fromJson(json);
     return BlogMapper.updateBlogResponseToEntity(updateBlogResponse);
   }
-
-  Map<String, dynamic> _parseResponse(dynamic raw) =>
-      raw is String ? jsonDecode(raw) : Map<String, dynamic>.from(raw as Map);
 
   @override
   Future<CreateBlog> createBlog({
@@ -83,7 +80,7 @@ class BlogDatasourceImpl extends BlogDatasource {
           };
 
     final response = await dio.post('/blogs', data: data);
-    return _jsonToCreateBlog(_parseResponse(response.data));
+    return _jsonToCreateBlog(decodeJsonBody(response));
   }
 
   @override
@@ -100,7 +97,7 @@ class BlogDatasourceImpl extends BlogDatasource {
         'blog_id': blogId,
       }
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToDeleteBlog(responseData);
   }
 
@@ -114,7 +111,7 @@ class BlogDatasourceImpl extends BlogDatasource {
         'blog_id': blogId,
       }
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToGetBlog(responseData);
   }
 
@@ -142,7 +139,7 @@ class BlogDatasourceImpl extends BlogDatasource {
         'limit': ?limit,
       }
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToGetBlogs(responseData);
   }
 
@@ -172,7 +169,7 @@ class BlogDatasourceImpl extends BlogDatasource {
         }
       }
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToUpdateBlog(responseData);
   }
 }

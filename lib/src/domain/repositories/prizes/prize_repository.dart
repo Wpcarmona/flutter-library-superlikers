@@ -30,6 +30,15 @@ abstract class PrizeRepository {
     required String distinctId,
   });
 
+  /// Datos externos de un cupón (`POST /coupons/{couponId}/external/{key}`),
+  /// p. ej. las opciones que el proveedor pide elegir antes de generarlo.
+  /// [opts] se envía tal cual al proveedor.
+  Future<CouponExternalData> getCouponExternalData({
+    required String couponId,
+    required String key,
+    Map<String, dynamic>? opts,
+  });
+
   /// Consulta el estado de un cupón ya redimido a partir de su [code].
   Future<CouponInfo> getCouponInfo({
     required String code,

@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
@@ -44,7 +44,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'properties': properties,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCreateActivityExternal(responseData);
   }
 
@@ -62,7 +62,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'external_action_id': externalActionId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToExternalFormField(responseData);
   }
 
@@ -90,7 +90,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
       data: data,
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToExternalFormList(responseData);
   }
 
@@ -108,7 +108,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'external_form_id': externalFormId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ExternalMapper.externalFormInfoToEntity(
       ExternalFormInfoResponse.fromJson(responseData),
     );
@@ -130,7 +130,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'limit': ?limit,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ExternalMapper.externalFormActivityListToEntity(
       ExternalFormActivityListResponse.fromJson(responseData),
     );
@@ -154,7 +154,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'external_form': externalForm,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ExternalMapper.externalFormActionResultToEntity(
       ExternalFormActionResultResponse.fromJson(responseData),
     );
@@ -176,7 +176,7 @@ class ExternalDatasourceImpl extends ExternalDatasource {
         'external_form': externalForm,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ExternalMapper.externalFormActionResultToEntity(
       ExternalFormActionResultResponse.fromJson(responseData),
     );

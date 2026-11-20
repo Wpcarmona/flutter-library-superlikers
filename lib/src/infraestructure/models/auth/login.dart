@@ -14,10 +14,14 @@ class LoginResponse {
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
-        ok: json["ok"],
-        token: json["token"],
-        participant: Participant.fromJson(json["participant"]),
-        message: json["message"],
+        ok: json["ok"]?.toString() ?? '',
+        token: json["token"]?.toString() ?? '',
+        participant: Participant.fromJson(
+          json["participant"] is Map
+              ? Map<String, dynamic>.from(json["participant"])
+              : const <String, dynamic>{},
+        ),
+        message: json["message"]?.toString() ?? '',
       );
 
   Map<String, dynamic> toJson() => {

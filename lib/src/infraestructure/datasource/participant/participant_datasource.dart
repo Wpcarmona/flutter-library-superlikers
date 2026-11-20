@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart' hide Participant;
 
@@ -39,7 +39,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
       '/microsite/participants/info',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToParticipantPublicInfo(responseData);
   }
 
@@ -57,7 +57,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'distinct_id': distinctId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToParticipantRanking(responseData);
   }
 
@@ -77,7 +77,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'properties': {'avatar': url},
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToUpdateAvatar(responseData);
   }
 
@@ -91,6 +91,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
     String? fcmToken,
     String? autorizationNumber,
     String? referralsCode,
+    Map<String, dynamic>? properties,
   }) async {
     final response = await dio.post(
       '/participants/update',
@@ -100,6 +101,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'campaign': Environment.campaign,
         'distinct_id': distinctId,
         'properties': {
+          ...?properties,
           'name': ?name,
           'phone': ?phone,
           'cargo': ?cargo,
@@ -109,7 +111,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         },
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToUpdateUser(responseData);
   }
 
@@ -117,6 +119,8 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
   Future<List<Participant>> searchParticipants({
     required String token,
     List<String>? tags,
+    bool? withAdmins,
+    bool? exactTags,
   }) async {
     final response = await dio.post(
       '/microsite/participants/list',
@@ -125,9 +129,11 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'api_key': Environment.apiKey,
         'campaign': Environment.campaign,
         if (tags != null && tags.isNotEmpty) 'tags': tags,
+        'with_admins': ?withAdmins,
+        'exact_tags': ?exactTags,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ParticipantMapper.participantListToEntity(
       ParticipantListResponse.fromJson(responseData),
     );
@@ -139,7 +145,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
       '/microsite/participants/points',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ParticipantMapper.participantPointsToEntity(
       ParticipantPointsResponse.fromJson(responseData),
     );
@@ -159,7 +165,7 @@ class ParticipantDatasourceImpl extends ParticipantDatasource {
         'points': points,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return ParticipantMapper.redeemPointsToEntity(RedeemPointsResponse.fromJson(responseData));
   }
 }

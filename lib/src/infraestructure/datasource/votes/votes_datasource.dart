@@ -1,9 +1,9 @@
-import 'dart:convert';
 
 import '../../../config/environment.dart';
 import '../../../domain/datasource/votes/votes_datasource.dart';
 import '../../../domain/entities/votes/votes.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/votes/votes_mapper.dart';
 import '../../models/votes/votes.dart';
 
@@ -30,9 +30,6 @@ class VotesDatasourceImpl extends VotesDatasource {
     return VotesMapper.countVotesPublicationToEntity(countVotesPublicationResponse);
   }
 
-  Map<String, dynamic> _parseResponse(dynamic raw) =>
-      raw is String ? jsonDecode(raw) : Map<String, dynamic>.from(raw as Map);
-
   @override
   Future<CountVotesPublication> countVotesPublication({String? distinctId, required String targetId}) async {
     final response = await dio.post(
@@ -44,7 +41,7 @@ class VotesDatasourceImpl extends VotesDatasource {
         'target_id': targetId,
       }
     );
-    final Map<String, dynamic> responseData = _parseResponse(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCountVotesPublication(responseData);
   }
 
@@ -61,7 +58,7 @@ class VotesDatasourceImpl extends VotesDatasource {
         'toggle': toggle,
       }
     );
-    final Map<String, dynamic> responseData = _parseResponse(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCreateVote(responseData);
   }
 
@@ -76,7 +73,7 @@ class VotesDatasourceImpl extends VotesDatasource {
         'target_id': targetId,
       }
     );
-    final Map<String, dynamic> responseData = _parseResponse(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToDeleteVote(responseData);
   }
 
@@ -92,7 +89,7 @@ class VotesDatasourceImpl extends VotesDatasource {
         'category': category,
       }
     );
-    final Map<String, dynamic> responseData = _parseResponse(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToUpdateVote(responseData);
   }
 }

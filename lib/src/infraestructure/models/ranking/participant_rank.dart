@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'advanced_ranking.dart' show rankingInt;
+
 ParticipantRankingResponse participantRankingResponseFromJson(String str) =>
     ParticipantRankingResponse.fromJson(json.decode(str));
 
@@ -17,8 +19,8 @@ class ParticipantRankingResponse {
 
   factory ParticipantRankingResponse.fromJson(Map<String, dynamic> json) =>
       ParticipantRankingResponse(
-        ok: json["ok"],
-        data: ParticipantRankingResponseData.fromJson(json["data"]),
+        ok: json["ok"]?.toString() ?? '',
+        data: ParticipantRankingResponseData.fromJson(_rankMap(json["data"])),
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,6 +56,10 @@ class ParticipantRankingResponseData {
   dynamic nivel;
   int ranking;
 
+  /// `data` del participante tal cual vino del backend (schema de la
+  /// campaign).
+  Map<String, dynamic> rawData;
+
   ParticipantRankingResponseData({
     required this.name,
     required this.firstName,
@@ -80,35 +86,37 @@ class ParticipantRankingResponseData {
     required this.cargo,
     required this.nivel,
     required this.ranking,
+    this.rawData = const {},
   });
 
   factory ParticipantRankingResponseData.fromJson(Map<String, dynamic> json) =>
       ParticipantRankingResponseData(
-        name: json["name"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        votes: json["votes"],
-        points: json["points"],
-        level: json["level"],
-        pointsByPtype: PointsByPtypeRanking.fromJson(json["points_by_ptype"]),
-        data: DataData.fromJson(json["data"]),
+        name: json["name"]?.toString() ?? '',
+        firstName: json["first_name"]?.toString() ?? '',
+        lastName: json["last_name"]?.toString() ?? '',
+        votes: rankingInt(json["votes"]),
+        points: rankingInt(json["points"]),
+        level: rankingInt(json["level"]),
+        pointsByPtype: PointsByPtypeRanking.fromJson(_rankMap(json["points_by_ptype"])),
+        data: DataData.fromJson(_rankMap(json["data"])),
         colour: json["colour"],
-        nombres: json["nombres"],
-        apellidos: json["apellidos"],
-        email: json["email"],
-        celular: json["celular"],
-        idEmpleado: json["id_empleado"],
-        region: json["region"],
-        tienda: json["tienda"],
-        plaza: json["plaza"],
+        nombres: json["nombres"]?.toString() ?? '',
+        apellidos: json["apellidos"]?.toString() ?? '',
+        email: json["email"]?.toString() ?? '',
+        celular: json["celular"]?.toString() ?? '',
+        idEmpleado: json["id_empleado"]?.toString() ?? '',
+        region: json["region"]?.toString() ?? '',
+        tienda: json["tienda"]?.toString() ?? '',
+        plaza: json["plaza"]?.toString() ?? '',
         nombreTienda: json["nombre_tienda"],
-        terms: json["terms"],
-        tags: List<String>.from(json["tags"].map((x) => x)),
+        terms: json["terms"] == true || json["terms"]?.toString() == 'true',
+        tags: json["tags"] is List ? [for (final x in json["tags"] as List) if (x != null) x.toString()] : <String>[],
         rol: json["rol"],
-        avatar: json["avatar"],
+        avatar: json["avatar"]?.toString() ?? '',
         cargo: json["cargo"],
         nivel: json["nivel"],
-        ranking: json["ranking"],
+        ranking: rankingInt(json["ranking"]),
+        rawData: _rankMap(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -178,20 +186,20 @@ class DataData {
   });
 
   factory DataData.fromJson(Map<String, dynamic> json) => DataData(
-        nombres: json["nombres"],
-        apellidos: json["apellidos"],
-        email: json["email"],
-        unconfirmedEmail: json["unconfirmed_email"],
-        celular: json["celular"],
-        idEmpleado: json["id_empleado"],
-        region: json["region"],
-        tienda: json["tienda"],
-        plaza: json["plaza"],
+        nombres: json["nombres"]?.toString() ?? '',
+        apellidos: json["apellidos"]?.toString() ?? '',
+        email: json["email"]?.toString() ?? '',
+        unconfirmedEmail: json["unconfirmed_email"]?.toString() ?? '',
+        celular: json["celular"]?.toString() ?? '',
+        idEmpleado: json["id_empleado"]?.toString() ?? '',
+        region: json["region"]?.toString() ?? '',
+        tienda: json["tienda"]?.toString() ?? '',
+        plaza: json["plaza"]?.toString() ?? '',
         nombreTienda: json["nombre_tienda"],
-        terms: json["terms"],
-        tags: List<String>.from(json["tags"].map((x) => x)),
+        terms: json["terms"] == true || json["terms"]?.toString() == 'true',
+        tags: json["tags"] is List ? [for (final x in json["tags"] as List) if (x != null) x.toString()] : <String>[],
         rol: json["rol"],
-        avatar: json["avatar"],
+        avatar: json["avatar"]?.toString() ?? '',
         cargo: json["cargo"],
         nivel: json["nivel"],
       );
@@ -224,3 +232,6 @@ class PointsByPtypeRanking {
 
   Map<String, dynamic> toJson() => {};
 }
+
+Map<String, dynamic> _rankMap(dynamic value) =>
+    value is Map ? Map<String, dynamic>.from(value) : <String, dynamic>{};

@@ -17,10 +17,15 @@ class RankingMapper {
       points: item.points,
       rankingPoints: item.rankingPoints,
       level: item.level,
-      pointsByPtype: Map<String, int>.from(item.pointsByPtype.toJson()),
+      pointsByPtype: {
+        for (final entry in item.rawPointsByPtype.entries)
+          entry.key: infra.rankingInt(entry.value),
+      },
       colour: item.colour,
       ranking: item.ranking,
-      data: item.data.toJson(),
+      // Campos tipados (con sus valores por defecto) + todo lo que el
+      // backend haya mandado para el schema de esta campaign.
+      data: {...item.data.toJson(), ...item.rawData},
     );
   }
 

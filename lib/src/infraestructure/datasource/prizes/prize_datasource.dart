@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart' hide Reward, CouponRedemption;
 
@@ -49,7 +49,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'distinct_id': distinctId,
       },
     );
-    final Map<String, dynamic> data = jsonDecode(response.data);
+    final Map<String, dynamic> data = decodeJsonBody(response);
     return _jsonToRewardCheck(data);
   }
 
@@ -78,7 +78,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         headers: {'Authorization': 'Bearer ${Environment.apiKey}'},
       ),
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToRewardList(responseData);
   }
 
@@ -98,7 +98,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'form_data': ?formData,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToRewardRedeem(responseData);
   }
 
@@ -115,8 +115,30 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         'distinct_id': distinctId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCouponRedeem(responseData);
+  }
+
+  @override
+  Future<CouponExternalData> getCouponExternalData({
+    required String couponId,
+    required String key,
+    Map<String, dynamic>? opts,
+  }) async {
+    final response = await dio.post(
+      '/coupons/$couponId/external/$key',
+      data: {
+        'api_key': Environment.apiKey,
+        'campaign': Environment.campaign,
+        'opts': ?opts,
+      },
+    );
+    final body = decodeJsonBody(response);
+    final data = body['data'];
+    return CouponExternalData(
+      ok: body['ok']?.toString() ?? '',
+      data: data is Map ? Map<String, dynamic>.from(data) : const {},
+    );
   }
 
   @override
@@ -133,7 +155,7 @@ class PrizeDatasourceImpl extends PrizesDatasource {
         headers: {'Authorization': 'Bearer ${Environment.apiKey}'},
       ),
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCouponInfo(responseData);
   }
 }

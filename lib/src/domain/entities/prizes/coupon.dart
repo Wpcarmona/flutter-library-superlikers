@@ -74,3 +74,15 @@ class CouponInfo {
     required this.expiresAt,
   });
 }
+
+/// Datos externos de un cupón (`POST /coupons/{id}/external/{key}`).
+///
+/// Lo que trae [data] depende del proveedor del cupón (por ejemplo listas de
+/// marcas, zonas, ciudades o sucursales para elegir antes de generarlo), así
+/// que se entrega tal cual y cada app lo interpreta según su catálogo.
+class CouponExternalData {
+  final String ok;
+  final Map<String, dynamic> data;
+
+  const CouponExternalData({required this.ok, required this.data});
+}

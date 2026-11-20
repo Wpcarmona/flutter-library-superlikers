@@ -28,6 +28,7 @@ abstract class ParticipantDatasource {
     String? fcmToken,
     String? autorizationNumber,
     String? referralsCode,
+    Map<String, dynamic>? properties,
   });
 
   /// Busca participantes por [tags] (uso típico: admin/coordinador buscando
@@ -35,6 +36,8 @@ abstract class ParticipantDatasource {
   Future<List<Participant>> searchParticipants({
     required String token,
     List<String>? tags,
+    bool? withAdmins,
+    bool? exactTags,
   });
 
   Future<ParticipantPoints> getParticipantPoints({required String token});

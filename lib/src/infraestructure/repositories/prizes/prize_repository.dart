@@ -66,6 +66,19 @@ class PrizeRepositoryImpl extends PrizeRepository {
   }
 
   @override
+  Future<CouponExternalData> getCouponExternalData({
+    required String couponId,
+    required String key,
+    Map<String, dynamic>? opts,
+  }) {
+    return datasource.getCouponExternalData(
+      couponId: couponId,
+      key: key,
+      opts: opts,
+    );
+  }
+
+  @override
   Future<CouponInfo> getCouponInfo({
     required String code,
   }) {

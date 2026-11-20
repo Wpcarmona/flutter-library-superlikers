@@ -1,3 +1,35 @@
+## 0.5.0
+
+* Response decoding is now shared and tolerant: every datasource uses the new public
+  `decodeJsonBody(response)` (exported from `superlikers_core.dart`). It accepts a body that
+  Dio already decoded (`application/json`) or a JSON string, and turns anything else (an HTML
+  502 page, an empty body, a JSON array) into a `DioException` of type `badResponse` with the
+  response attached, instead of a `TypeError`/`FormatException` that apps' `on DioException`
+  handlers never caught. Apps can use it in their own datasources built on `createPinnedDio`.
+* More tolerant models: `LoginResponse` (null `participant`/`message`/`token`) and
+  `ParticipantPublicInfoResponse` (missing `object`, numbers or booleans sent as strings,
+  invalid `last_activity_at`, non-string tags) no longer throw while parsing.
+* `ParticipantRepository.updateUser` gets an optional `properties` map to update any field of
+  the campaign's participant schema (tags, avatar, campaign-specific fields). Named params
+  still win over the same keys in `properties`.
+* `ParticipantRepository.searchParticipants` gets optional `withAdmins` (`with_admins`) and
+  `exactTags` (`exact_tags`).
+* `RankingRepository.getPointsInPeriod` gets an optional `pointTypeId` (`point_type_id`).
+* New `PrizesRepository.getCouponExternalData` (`POST /coupons/{id}/external/{key}`, optional
+  `opts`) returns the coupon provider's raw `data` in a `CouponExternalData`, since its shape
+  depends on each provider.
+* Advanced ranking is no longer tied to one campaign's schema:
+  * `AdvancedRanking.data` now keeps every field the backend sends for the participant (on
+    top of the typed ones and their defaults), and `pointsByPtype` is actually filled (it was
+    always empty).
+  * `getParticipantRanking` uses `name`/`last_name` when the campaign has no `nombres`/
+    `apellidos`, and returns the participant's `data` (it was always `{}`).
+  * Both ranking models parse tolerantly (numbers as strings/decimals, missing fields,
+    non-string tags): a campaign without the OXXO-specific fields used to throw.
+* Callers are unaffected; custom `ParticipantDatasource`/`ParticipantRepository`/
+  `RankingDatasource`/`RankingRepository`/`PrizesDatasource`/`PrizesRepository`
+  implementations must update their overrides and implement `getCouponExternalData`.
+
 ## 0.4.0
 
 * `UploadPhotoRepository.uploadPhoto` (`POST /photos`) now covers every documented param:

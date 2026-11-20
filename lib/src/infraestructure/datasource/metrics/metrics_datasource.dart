@@ -1,8 +1,8 @@
-import 'dart:convert';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
@@ -31,7 +31,7 @@ class MetricsDatasourceImpl extends MetricsDatasource {
         'q': ?q,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToListMetrics(responseData);
   }
 
@@ -50,7 +50,7 @@ class MetricsDatasourceImpl extends MetricsDatasource {
       'timeframe': timeFrame,
       'uid_type': ?uidType,
     });
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToCalculateMetrics(responseData);
   }
 }

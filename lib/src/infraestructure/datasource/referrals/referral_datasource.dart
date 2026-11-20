@@ -1,18 +1,15 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
 class ReferralDatasourceImpl extends ReferralDatasource {
   final dio = createPinnedDio(baseUrl: Environment.baseUrl);
-
-  Map<String, dynamic> _parseResponse(dynamic raw) =>
-      raw is String ? jsonDecode(raw) : Map<String, dynamic>.from(raw as Map);
 
   @override
   Future<ReferralCode> getOrUpdateReferralCode({
@@ -28,7 +25,7 @@ class ReferralDatasourceImpl extends ReferralDatasource {
         'code': ?code,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return ReferralMapper.referralCodeToEntity(ReferralCodeResponse.fromJson(responseData));
   }
 
@@ -48,7 +45,7 @@ class ReferralDatasourceImpl extends ReferralDatasource {
         'limit': ?limit,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return ReferralMapper.participantReferralsToEntity(
       ParticipantReferralsResponse.fromJson(responseData),
     );

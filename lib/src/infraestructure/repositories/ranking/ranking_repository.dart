@@ -55,11 +55,13 @@ class RankingRepositoryImpl extends RankingRepository {
     required String distinctId,
     required String startDate,
     required String endDate,
+    String? pointTypeId,
   }) {
     return datasource.getPointsInPeriod(
       distinctId: distinctId,
       startDate: startDate,
       endDate: endDate,
+      pointTypeId: pointTypeId,
     );
   }
 }

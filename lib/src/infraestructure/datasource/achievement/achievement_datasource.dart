@@ -1,8 +1,8 @@
-import 'dart:convert';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart' hide Achievement;
 
@@ -45,7 +45,7 @@ class AchievementDatasourceImpl extends AchievementDatasource {
     };
 
     final response = await dio.post('/achievements/index', data: data);
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToAchievement(responseData);
   }
 }

@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
@@ -51,9 +51,6 @@ class AuthDatasourceImpl extends AuthDatasource {
     return AuthMapper.authActionResultToEntity(response);
   }
 
-  Map<String, dynamic> _parseResponse(dynamic raw) =>
-      raw is String ? jsonDecode(raw) : Map<String, dynamic>.from(raw as Map);
-
   @override
   Future<Login> login({required Map<String, dynamic> participation}) async {
     final response = await dio.post(
@@ -64,7 +61,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "participation": participation,
       },
     );
-    final Map<String, dynamic> data = jsonDecode(response.data);
+    final Map<String, dynamic> data = decodeJsonBody(response);
     return _jsonToLogin(data);
   }
 
@@ -74,7 +71,7 @@ class AuthDatasourceImpl extends AuthDatasource {
       '/microsite/sessions/logout',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
-    final Map<String, dynamic> data = jsonDecode(response.data);
+    final Map<String, dynamic> data = decodeJsonBody(response);
     return _jsonToLogout(data);
   }
 
@@ -89,7 +86,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         if (referralsCode != null) "participation": {"referrals_code": referralsCode},
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToRegister(responseData);
   }
 
@@ -104,7 +101,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "notification_channel": "email",
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToResetPassword(responseData);
   }
 
@@ -119,7 +116,7 @@ class AuthDatasourceImpl extends AuthDatasource {
       },
     );
 
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToResetPassWordValidate(responseData);
   }
 
@@ -141,7 +138,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "token": token,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToResetPassword(responseData);
   }
 
@@ -155,7 +152,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "distinct_id": uid,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToEmailVerify(responseData);
   }
 
@@ -173,7 +170,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "code": code,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToEmailVerifyResend(responseData);
   }
 
@@ -183,7 +180,7 @@ class AuthDatasourceImpl extends AuthDatasource {
       '/microsite/sessions/loginform',
       data: {"campaign": Environment.campaign},
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return AuthMapper.loginFormToEntity(LoginFormResponse.fromJson(responseData));
   }
 
@@ -199,7 +196,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "campaign": Environment.campaign,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return AuthMapper.participantLoginRequirementsToEntity(
       ParticipantLoginRequirementsResponse.fromJson(responseData),
     );
@@ -215,7 +212,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "campaign": Environment.campaign,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -232,7 +229,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "code": code,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -249,7 +246,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "channel": channel,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -268,7 +265,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "code": code,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -281,7 +278,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "campaign": Environment.campaign,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return AuthMapper.setupTwoFactorTotpToEntity(
       SetupTwoFactorTotpResponse.fromJson(responseData),
     );
@@ -303,7 +300,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "code_2": code2,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -320,7 +317,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         "code": code,
       },
     );
-    return _jsonToAuthActionResult(_parseResponse(response.data));
+    return _jsonToAuthActionResult(decodeJsonBody(response));
   }
 
   @override
@@ -343,7 +340,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         },
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return AuthMapper.resetPasswordToEntity(ResetPasswordResponse.fromJson(responseData));
   }
 }

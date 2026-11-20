@@ -16,8 +16,13 @@ class AdvancedRankingResponse {
 
   factory AdvancedRankingResponse.fromJson(Map<String, dynamic> json) =>
       AdvancedRankingResponse(
-        ok: json["ok"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        ok: json["ok"]?.toString() ?? '',
+        data: json["data"] is List
+            ? [
+                for (final x in json["data"] as List)
+                  if (x is Map) Datum.fromJson(Map<String, dynamic>.from(x)),
+              ]
+            : <Datum>[],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +44,14 @@ class Datum {
   dynamic colour;
   int ranking;
 
+  /// `data` del participante tal cual vino del backend: su schema depende
+  /// de la campaign, así que se conservan todos los campos (no solo los que
+  /// [DataAdvancedRanking] tipa).
+  Map<String, dynamic> rawData;
+
+  /// `points_by_ptype` tal cual vino del backend (tipo de punto → puntos).
+  Map<String, dynamic> rawPointsByPtype;
+
   Datum({
     required this.name,
     required this.firstName,
@@ -51,21 +64,29 @@ class Datum {
     required this.data,
     required this.colour,
     required this.ranking,
+    this.rawData = const {},
+    this.rawPointsByPtype = const {},
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        name: json["name"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        votes: json["votes"],
-        points: json["points"],
-        rankingPoints: json["ranking_points"],
-        level: json["level"],
-        pointsByPtype: PointsByPtype.fromJson(json["points_by_ptype"]),
-        data: DataAdvancedRanking.fromJson(json["data"]),
-        colour: json["colour"],
-        ranking: json["ranking"],
-      );
+  factory Datum.fromJson(Map<String, dynamic> json) {
+    final data = _map(json["data"]);
+    final pointsByPtype = _map(json["points_by_ptype"]);
+    return Datum(
+      name: json["name"]?.toString() ?? '',
+      firstName: json["first_name"]?.toString() ?? '',
+      lastName: json["last_name"]?.toString() ?? '',
+      votes: rankingInt(json["votes"]),
+      points: rankingInt(json["points"]),
+      rankingPoints: rankingInt(json["ranking_points"]),
+      level: rankingInt(json["level"]),
+      pointsByPtype: PointsByPtype.fromJson(pointsByPtype),
+      data: DataAdvancedRanking.fromJson(data),
+      colour: json["colour"],
+      ranking: rankingInt(json["ranking"]),
+      rawData: data,
+      rawPointsByPtype: pointsByPtype,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "name": name,
@@ -120,22 +141,24 @@ class DataAdvancedRanking {
   });
 
   factory DataAdvancedRanking.fromJson(Map<String, dynamic> json) => DataAdvancedRanking(
-        nombres: json["nombres"] ?? '',
-        apellidos: json["apellidos"] ?? '',
-        email: json["email"] ?? '',
-        unconfirmedEmail: json["unconfirmed_email"],
-        celular: json["celular"] ?? '',
-        idEmpleado: json["id_empleado"] ?? '',
-        region: json["region"] ?? '',
-        tienda: json["tienda"] ?? '',
-        plaza: json["plaza"] ?? '',
-        nombreTienda: json["nombre_tienda"],
-        terms: json["terms"] ?? false,
-        tags: json["tags"] != null ? List<String>.from(json["tags"].map((x) => x)) : [],
+        nombres: json["nombres"]?.toString() ?? '',
+        apellidos: json["apellidos"]?.toString() ?? '',
+        email: json["email"]?.toString() ?? '',
+        unconfirmedEmail: json["unconfirmed_email"]?.toString(),
+        celular: json["celular"]?.toString() ?? '',
+        idEmpleado: json["id_empleado"]?.toString() ?? '',
+        region: json["region"]?.toString() ?? '',
+        tienda: json["tienda"]?.toString() ?? '',
+        plaza: json["plaza"]?.toString() ?? '',
+        nombreTienda: json["nombre_tienda"]?.toString(),
+        terms: json["terms"] == true || json["terms"]?.toString() == 'true',
+        tags: json["tags"] is List
+            ? [for (final x in json["tags"] as List) if (x != null) x.toString()]
+            : <String>[],
         rol: json["rol"],
-        avatar: json["avatar"],
-        cargo: json["cargo"],
-        nivel: json["nivel"],
+        avatar: json["avatar"]?.toString(),
+        cargo: json["cargo"]?.toString(),
+        nivel: json["nivel"]?.toString(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -164,4 +187,18 @@ class PointsByPtype {
   factory PointsByPtype.fromJson(Map<String, dynamic> json) => PointsByPtype();
 
   Map<String, dynamic> toJson() => {};
+}
+
+Map<String, dynamic> _map(dynamic value) =>
+    value is Map ? Map<String, dynamic>.from(value) : <String, dynamic>{};
+
+/// Entero tolerante para los campos numéricos del ranking (acepta decimales
+/// y texto numérico; cualquier otra cosa es 0).
+int rankingInt(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.round();
+  if (value is String) {
+    return int.tryParse(value.trim()) ?? double.tryParse(value.trim())?.round() ?? 0;
+  }
+  return 0;
 }

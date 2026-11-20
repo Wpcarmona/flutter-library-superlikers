@@ -1,8 +1,8 @@
-import 'dart:convert';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
@@ -74,7 +74,7 @@ class RankingDatasourceImpl extends RankingDatasource {
       queryParameters: queryParams,
     );
 
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToAdvancedRankingList(responseData);
   }
 
@@ -92,7 +92,7 @@ class RankingDatasourceImpl extends RankingDatasource {
         if (pointType != null && pointType.trim().isNotEmpty) 'point_type': pointType,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return RankingMapper.toSegmentList(RankingSegmentResponse.fromJson(responseData));
   }
 
@@ -101,6 +101,7 @@ class RankingDatasourceImpl extends RankingDatasource {
     required String distinctId,
     required String startDate,
     required String endDate,
+    String? pointTypeId,
   }) async {
     final response = await dio.post(
       '/participants/points_in_period',
@@ -110,9 +111,10 @@ class RankingDatasourceImpl extends RankingDatasource {
         'distinct_id': distinctId,
         'start_date': startDate,
         'end_date': endDate,
+        'point_type_id': ?pointTypeId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return RankingMapper.toPointsInPeriod(PointsInPeriodResponse.fromJson(responseData));
   }
 }

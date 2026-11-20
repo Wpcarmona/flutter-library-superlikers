@@ -1,18 +1,15 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
 class CommentDatasourceImpl extends CommentDatasource {
   final dio = createPinnedDio(baseUrl: Environment.baseUrl);
-
-  Map<String, dynamic> _parseResponse(dynamic raw) =>
-      raw is String ? jsonDecode(raw) : Map<String, dynamic>.from(raw as Map);
 
   @override
   Future<ListComments> listComments({
@@ -28,7 +25,7 @@ class CommentDatasourceImpl extends CommentDatasource {
         'target_id': targetId,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return CommentMapper.listCommentsToEntity(ListCommentsResponse.fromJson(responseData));
   }
 
@@ -56,7 +53,7 @@ class CommentDatasourceImpl extends CommentDatasource {
         },
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return CommentMapper.commentActivityResultToEntity(
       CommentActivityResultResponse.fromJson(responseData),
     );
@@ -88,7 +85,7 @@ class CommentDatasourceImpl extends CommentDatasource {
         },
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return CommentMapper.commentActivityResultToEntity(
       CommentActivityResultResponse.fromJson(responseData),
     );
@@ -112,7 +109,7 @@ class CommentDatasourceImpl extends CommentDatasource {
         'comment_id': commentId,
       },
     );
-    final responseData = _parseResponse(response.data);
+    final responseData = decodeJsonBody(response);
     return CommentMapper.deleteCommentToEntity(DeleteCommentResponse.fromJson(responseData));
   }
 }

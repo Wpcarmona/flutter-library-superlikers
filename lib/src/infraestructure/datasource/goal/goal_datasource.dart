@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/goal/goals.dart';
 import '../../models/models.dart';
 
@@ -61,7 +61,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'q': ?q,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _goalsIndexFromResponse(responseData);
   }
 
@@ -83,7 +83,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'page': page,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _goalsParticipantFromResponse(responseData);
   }
 
@@ -103,7 +103,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'uid_type': ?uidType,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToAcceptGoals(responseData);
   }
 
@@ -123,7 +123,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'uid_type': ?uidType,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return _jsonToUnacceptGoals(responseData);
   }
 
@@ -141,7 +141,7 @@ class GoalDatasourceImpl extends GoalDatasource {
         'goal_id': goalId,
       },
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
     return GoalMapper.getGoalStatusInfoToEntity(GoalStatusInfoResponse.fromJson(responseData));
   }
 }

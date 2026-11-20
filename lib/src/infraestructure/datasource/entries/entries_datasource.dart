@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
 import '../../../config/environment.dart';
 import '../../../domain/domain.dart';
 import '../../../network/pinned_dio.dart';
+import '../../../network/json_body.dart';
 import '../../mappers/mapper.dart';
 import '../../models/models.dart';
 
@@ -58,7 +58,7 @@ class EntriesDatasourceImpl extends EntriesDatasource {
       data: data,
       options: token != null ? Options(headers: {'Authorization': 'Bearer $token'}) : null,
     );
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    final Map<String, dynamic> responseData = decodeJsonBody(response);
 
     return _jsonToListEntries(responseData);
   }

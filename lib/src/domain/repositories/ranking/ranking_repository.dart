@@ -30,5 +30,6 @@ abstract class RankingRepository {
     required String distinctId,
     required String startDate,
     required String endDate,
+    String? pointTypeId,
   });
 }

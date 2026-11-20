@@ -17,8 +17,12 @@ class ParticipantPublicInfoResponse {
 
   factory ParticipantPublicInfoResponse.fromJson(Map<String, dynamic> json) =>
       ParticipantPublicInfoResponse(
-        ok: json["ok"],
-        object: Object.fromJson(json["object"]),
+        ok: json["ok"]?.toString() ?? '',
+        object: Object.fromJson(
+          json["object"] is Map
+              ? Map<String, dynamic>.from(json["object"])
+              : const <String, dynamic>{},
+        ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -90,26 +94,30 @@ class Object {
   };
 
   factory Object.fromJson(Map<String, dynamic> json) => Object(
-        uid: json["uid"] ?? '',
+        uid: json["uid"]?.toString() ?? '',
         uidType: json["uid_type"],
-        email: json["email"] ?? '',
-        points: json["points"] ?? 0,
-        totalPoints: json["total_points"] ?? 0,
+        email: json["email"]?.toString() ?? '',
+        points: _num(json["points"]),
+        totalPoints: _num(json["total_points"]),
         coins: json["coins"] is List ? List<dynamic>.from(json["coins"]) : const [],
         totalCoins: json["total_coins"] is List
             ? List<dynamic>.from(json["total_coins"])
             : const [],
-        state: json["state"] ?? '',
-        badEmail: json["bad_email"] ?? false,
-        emailVerified: json["email_verified"] ?? false,
-        cellphoneVerified: json["cellphone_verified"] ?? false,
-        unconfirmedEmail: json["unconfirmed_email"] ?? false,
-        unconfirmedCellphone: json["unconfirmed_cellphone"] ?? false,
-        avatar: json["avatar"] ?? '',
-        lastActivityAt: json["last_activity_at"] != null
-            ? DateTime.parse(json["last_activity_at"])
-            : DateTime.fromMillisecondsSinceEpoch(0),
-        tags: json["tags"] is List ? List<String>.from(json["tags"]) : const [],
+        state: json["state"]?.toString() ?? '',
+        badEmail: _bool(json["bad_email"]),
+        emailVerified: _bool(json["email_verified"]),
+        cellphoneVerified: _bool(json["cellphone_verified"]),
+        unconfirmedEmail: _bool(json["unconfirmed_email"]),
+        unconfirmedCellphone: _bool(json["unconfirmed_cellphone"]),
+        avatar: json["avatar"]?.toString() ?? '',
+        lastActivityAt: DateTime.tryParse('${json["last_activity_at"]}') ??
+            DateTime.fromMillisecondsSinceEpoch(0),
+        tags: json["tags"] is List
+            ? [
+                for (final tag in json["tags"] as List)
+                  if (tag != null) tag.toString(),
+              ]
+            : const [],
         properties: Map<String, dynamic>.from(json)
           ..removeWhere((key, _) => _knownKeys.contains(key)),
       );
@@ -133,4 +141,19 @@ class Object {
         "tags": tags,
         ...properties,
       };
+}
+
+/// Número tolerante: acepta enteros, decimales o texto numérico.
+num _num(dynamic value) {
+  if (value is num) return value;
+  if (value is String) return num.tryParse(value.trim()) ?? 0;
+  return 0;
+}
+
+/// Booleano tolerante: acepta `true`/`false`, `"true"`/`"false"` y 1/0.
+bool _bool(dynamic value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) return value.trim().toLowerCase() == 'true';
+  return false;
 }
