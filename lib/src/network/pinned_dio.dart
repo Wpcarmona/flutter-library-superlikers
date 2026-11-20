@@ -138,6 +138,19 @@ Dio createPinnedDio({required String baseUrl}) {
     ),
   );
   applyCertificatePinning(dio);
-  dio.interceptors.add(SessionExpiredInterceptor());
+  dio.interceptors
+    ..add(SessionExpiredInterceptor())
+    ..addAll(SuperlikersHttp.interceptors);
   return dio;
+}
+
+/// Ajustes de red que la app consumidora quiere en todos los clientes del
+/// SDK (y en los suyos propios creados con [createPinnedDio]).
+class SuperlikersHttp {
+  SuperlikersHttp._();
+
+  /// Interceptores extra (logs, reglas de acceso propias de la app, etc.).
+  /// Se agregan a cada cliente al crearlo, así que deben registrarse al
+  /// arrancar, antes de crear repositorios o datasources.
+  static final List<Interceptor> interceptors = [];
 }

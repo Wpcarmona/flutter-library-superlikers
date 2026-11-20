@@ -1,10 +1,10 @@
 import '../../../domain/domain.dart';
 import '../../datasource/datasource.dart';
 
-class MetricsRepositoryimpl extends MetricsRepository {
+class MetricsRepositoryImpl extends MetricsRepository {
   final MetricsDatasource datasource;
 
-  MetricsRepositoryimpl([MetricsDatasource? datasource])
+  MetricsRepositoryImpl([MetricsDatasource? datasource])
       : datasource = datasource ?? MetricsDatasourceImpl();
 
   @override
@@ -26,3 +26,7 @@ class MetricsRepositoryimpl extends MetricsRepository {
         uidType: uidType);
   }
 }
+
+/// Nombre anterior (con errata); usar [MetricsRepositoryImpl].
+@Deprecated('Usar MetricsRepositoryImpl')
+typedef MetricsRepositoryimpl = MetricsRepositoryImpl;

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:superlikers_core/superlikers_core.dart';
@@ -34,5 +35,13 @@ void main() {
 
     expect(dio.options.baseUrl, 'https://api.superlikers.com/v1');
     expect(dio.options.followRedirects, isFalse);
+  });
+
+  test('createPinnedDio agrega los interceptores registrados por la app', () {
+    final interceptor = InterceptorsWrapper();
+    SuperlikersHttp.interceptors.add(interceptor);
+    addTearDown(SuperlikersHttp.interceptors.clear);
+    final dio = createPinnedDio(baseUrl: 'https://api.superlikers.com/v1');
+    expect(dio.interceptors, contains(interceptor));
   });
 }

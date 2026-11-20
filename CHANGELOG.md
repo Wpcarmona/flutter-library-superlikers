@@ -5,6 +5,11 @@
   each campaign (goal configuration, entry invoices, the prize provider's metadata such as
   brands/zones/sites, coupon download URLs, `voted`…), so apps can read their own fields without
   the library having to model every campaign. Typed fields are unchanged.
+* New `SuperlikersHttp.interceptors`: interceptors the app registers once at startup are added to
+  every client `createPinnedDio` creates (the SDK's and the app's own), e.g. for logging or
+  app-specific access rules.
+* `MetricsRepositoryimpl` renamed to `MetricsRepositoryImpl` like every other repository; the old
+  name stays as a deprecated alias.
 * `GoalRepository.getGoalsParticipant` gets an optional `includeEnded` (`include_ended`).
 * New `ExternalRepository.getExternalFormFieldBySlug` (`fields_info` by the action's `slug`).
 * `PrizesRepository.redeemCoupon` gets optional `opts`, sent as-is to the coupon provider (e.g.
